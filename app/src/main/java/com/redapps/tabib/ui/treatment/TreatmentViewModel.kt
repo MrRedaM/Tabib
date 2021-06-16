@@ -1,10 +1,10 @@
-package com.redapps.tabib.ui.dashboard
+package com.redapps.tabib.ui.treatment
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class DashboardViewModel : ViewModel() {
+class TreatmentViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is dashboard Fragment"
