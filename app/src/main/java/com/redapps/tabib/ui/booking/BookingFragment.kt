@@ -8,7 +8,9 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.redapps.tabib.databinding.FragmentBookingBinding
+import com.redapps.tabib.model.Doctor
 
 class BookingFragment : Fragment() {
 
@@ -30,15 +32,36 @@ class BookingFragment : Fragment() {
         _binding = FragmentBookingBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textHome
+        //val textView: TextView = binding.textHome
         bookingViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
+            //textView.text = it
         })
+
+        initDoctorRecycler()
+
         return root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun initDoctorRecycler(){
+        val recycler = binding.recyclerDoctorBooking
+        val adapter = DoctorAdapter()
+        recycler.adapter = adapter
+        recycler.layoutManager = LinearLayoutManager(context)
+        adapter.setDoctors(getRandomDoctors(10))
+    }
+
+    private fun getRandomDoctors(count: Int): List<Doctor>{
+        val list = mutableListOf<Doctor>()
+        val doctor = Doctor("Ahmed", "Doctor", "", "05 35 54 23 88",
+        "Psychology", 0.0, 0.0)
+        for (i in 1..count){
+            list.add(doctor)
+        }
+        return list
     }
 }

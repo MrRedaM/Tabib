@@ -10,4 +10,7 @@
     <color name="red_main">#da6c5f</color>
     <color name="dark_background">#132324</color>
     <color name="dark_foreground">#152728</color>
+    <color name="blue">#1a73e8</color>
+    <color name="light_grey">#f1f3f4</color>
+    <color name="darker_foreground">#111e21</color>
 </resources>

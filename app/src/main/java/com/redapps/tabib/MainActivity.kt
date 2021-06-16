@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import com.bumptech.glide.Glide
 import com.redapps.tabib.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -30,5 +31,9 @@ class MainActivity : AppCompatActivity() {
         )
         //setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        Glide.with(this)
+            .load(R.drawable.doctor_harold)
+            .into(binding.imageAccountMain)
     }
 }
