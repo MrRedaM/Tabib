@@ -6,4 +6,13 @@
     <string name="phone_preview"><u>05 55 38 97 88</u></string>
     <string name="locqtion_preview"><u>Alger - Oued SMAR</u></string>
     <string name="search_for_a_doctor">Search for a doctor...</string>
+    <string name="name_transition_name">nameDoctorBook</string>
+    <string name="image_transition_name">imageDoctorBooking</string>
+    <string name="speciality_transition_name">speciality_transition_name</string>
+    <string name="location_transition_name">location_transition_name</string>
+    <string name="phone_transition_name">phone_transition_name</string>
+    <string name="phone_image_transition_name">phone_image_transition_name</string>
+    <string name="location_image_transition_name">location_image_transition_name</string>
+    <string name="card_transition_name">card_transition_name</string>
+
 </resources>

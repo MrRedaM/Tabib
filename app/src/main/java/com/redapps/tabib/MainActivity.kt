@@ -1,6 +1,7 @@
 package com.redapps.tabib
 
 import android.os.Bundle
+import android.view.View
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -31,6 +32,18 @@ class MainActivity : AppCompatActivity() {
         )
         //setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+        
+        navController.addOnDestinationChangedListener{ _, destination, _ ->
+            if(destination.id == R.id.nav_doctor_detail) {
+                binding.textAppTitle.visibility = View.GONE
+                binding.imageAccountMain.visibility = View.GONE
+                binding.navView.visibility = View.GONE
+            } else {
+                binding.textAppTitle.visibility = View.VISIBLE
+                binding.imageAccountMain.visibility = View.VISIBLE
+                binding.navView.visibility = View.VISIBLE
+            }
+        }
 
         Glide.with(this)
             .load(R.drawable.doctor_harold)
