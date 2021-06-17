@@ -13,11 +13,15 @@
         <item name="android:statusBarColor" tools:targetApi="l">?android:windowBackground</item>
         <!-- Customize your theme here. -->
         <item name="android:windowBackground">@color/dark_background</item>
-        <item name="cardBackgroundColor">@color/darker_foreground</item>
+        <item name="cardBackgroundColor">@color/on_dark_background</item>
         <item name="fontFamily">@font/montserrat</item>
         <item name="android:navigationBarColor">@color/dark_foreground</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
         <item name="searchBackgroundColor">@color/dark_foreground</item>
         <item name="android:windowContentTransitions">true</item>
+        <item name="calendarItemBackgroundColor">@color/darker_foreground</item>
+        <item name="calendarItemSelectedBackgroundColor">?attr/colorPrimary</item>
+        <item name="bigTimeColor">?attr/colorPrimary</item>
+        <item name="imageButtonBackgroundColor">@color/darker_foreground</item>
     </style>
 </resources>

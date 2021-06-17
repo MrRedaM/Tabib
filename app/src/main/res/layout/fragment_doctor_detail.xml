@@ -117,4 +117,63 @@
         app:layout_constraintStart_toStartOf="@+id/imageView2"
         app:tint="@color/blue"/>
 
+    <ImageButton
+        android:id="@+id/buttonCalendarLeftBooking"
+        style="@style/default_image_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/ic_round_keyboard_arrow_left_24"
+        app:layout_constraintBottom_toBottomOf="@+id/textCalendarMonthBooking"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textCalendarMonthBooking" />
+
+    <com.michalsvec.singlerowcalendar.calendar.SingleRowCalendar
+        android:id="@+id/calendarBooking"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:deselection="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textCalendarMonthBooking"
+        app:longPress="false"
+        app:multiSelection="false">
+
+    </com.michalsvec.singlerowcalendar.calendar.SingleRowCalendar>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerTimeBooking"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/calendarBooking" />
+
+    <ImageButton
+        android:id="@+id/buttonCalendarRightBooking"
+        style="@style/default_image_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/ic_round_keyboard_arrow_right_24"
+        app:layout_constraintBottom_toBottomOf="@+id/textCalendarMonthBooking"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textCalendarMonthBooking" />
+
+    <TextView
+        android:id="@+id/textCalendarMonthBooking"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="June, 2021"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

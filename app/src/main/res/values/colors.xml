@@ -13,4 +13,6 @@
     <color name="blue">#1a73e8</color>
     <color name="light_grey">#f1f3f4</color>
     <color name="darker_foreground">#111e21</color>
+    <color name="disabled_dark">#0f1b1b</color>
+    <color name="on_dark_background">#2b4049</color>
 </resources>

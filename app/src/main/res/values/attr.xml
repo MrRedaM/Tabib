@@ -2,5 +2,9 @@
 <resources>
     <declare-styleable name="Theme">
         <attr name="searchBackgroundColor" format="color"/>
+        <attr name="calendarItemBackgroundColor" format="color"/>
+        <attr name="calendarItemSelectedBackgroundColor" format="color"/>
+        <attr name="bigTimeColor" format="color"/>
+        <attr name="imageButtonBackgroundColor" format="color"/>
     </declare-styleable>
 </resources>

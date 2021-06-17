@@ -14,11 +14,15 @@
         <item name="android:windowLightStatusBar">true</item>
         <!-- Customize your theme here. -->
         <item name="android:windowBackground">@color/white</item>
-        <item name="cardBackgroundColor">@color/white</item>
+        <item name="cardBackgroundColor">@color/light_grey</item>
         <item name="fontFamily">@font/montserrat</item>
         <item name="android:navigationBarColor">@color/white</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
         <item name="searchBackgroundColor">@color/light_grey</item>
         <item name="android:windowContentTransitions">true</item>
+        <item name="calendarItemBackgroundColor">@color/light_grey</item>
+        <item name="calendarItemSelectedBackgroundColor">?attr/colorPrimary</item>
+        <item name="bigTimeColor">?attr/colorPrimary</item>
+        <item name="imageButtonBackgroundColor">@color/light_grey</item>
     </style>
 </resources>
