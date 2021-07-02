@@ -31,16 +31,10 @@ class BookingFragment : Fragment() {
             ViewModelProvider(this).get(BookingViewModel::class.java)
 
         _binding = FragmentBookingBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        //val textView: TextView = binding.textHome
-        bookingViewModel.text.observe(viewLifecycleOwner, Observer {
-            //textView.text = it
-        })
 
         initDoctorRecycler()
 
-        return root
+        return binding.root
     }
 
     override fun onDestroyView() {

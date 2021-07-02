@@ -28,13 +28,8 @@ class TreatmentFragment : Fragment() {
             ViewModelProvider(this).get(TreatmentViewModel::class.java)
 
         _binding = FragmentTreatmentBinding.inflate(inflater, container, false)
-        val root: View = binding.root
 
-        val textView: TextView = binding.textDashboard
-        treatmentViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
-        return root
+        return binding.root
     }
 
     override fun onDestroyView() {

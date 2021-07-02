@@ -20,6 +20,15 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        initNavigation()
+
+        // temp
+        Glide.with(this)
+            .load(R.drawable.doctor_harold)
+            .into(binding.imageAccountMain)
+    }
+
+    private fun initNavigation(){
         val navView: BottomNavigationView = binding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
@@ -32,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         )
         //setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-        
+
         navController.addOnDestinationChangedListener{ _, destination, _ ->
             if(destination.id == R.id.nav_doctor_detail) {
                 binding.textAppTitle.visibility = View.GONE
@@ -44,9 +53,5 @@ class MainActivity : AppCompatActivity() {
                 binding.navView.visibility = View.VISIBLE
             }
         }
-
-        Glide.with(this)
-            .load(R.drawable.doctor_harold)
-            .into(binding.imageAccountMain)
     }
 }

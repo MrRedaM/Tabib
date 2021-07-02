@@ -1,5 +1,6 @@
 package com.redapps.tabib.ui.booking
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,27 +33,15 @@ class DoctorAdapter: RecyclerView.Adapter<DoctorAdapter.DoctorViewHolder>() {
             .load(R.drawable.doctor_harold)
             .into(holder.image)
         holder.itemView.setOnClickListener(View.OnClickListener {
-            val imageTransitionName = holder.itemView.context.getString(R.string.image_transition_name)
-            val nameTransitionName = holder.itemView.context.getString(R.string.name_transition_name)
-            val specialityTransitionName = holder.itemView.context.getString(R.string.speciality_transition_name)
-            val locationTransitionName = holder.itemView.context.getString(R.string.location_transition_name)
-            val phoneTransitionName = holder.itemView.context.getString(R.string.phone_transition_name)
-            val phoneImageTransitionName = holder.itemView.context.getString(R.string.phone_image_transition_name)
-            val locationImageTransitionName = holder.itemView.context.getString(R.string.location_image_transition_name)
-            ViewCompat.setTransitionName(holder.name, nameTransitionName)
-            ViewCompat.setTransitionName(holder.image, imageTransitionName)
-            ViewCompat.setTransitionName(holder.speciality, specialityTransitionName)
-            ViewCompat.setTransitionName(holder.location, locationTransitionName)
-            ViewCompat.setTransitionName(holder.phone, phoneTransitionName)
-            ViewCompat.setTransitionName(holder.locationImage, locationImageTransitionName)
-            ViewCompat.setTransitionName(holder.phoneImage, phoneImageTransitionName)
-            val extras = FragmentNavigatorExtras(holder.image to imageTransitionName
-                    ,holder.name to nameTransitionName
-                    ,holder.speciality to specialityTransitionName
-                    ,holder.location to locationTransitionName
-                    ,holder.phone to phoneTransitionName
-                    ,holder.locationImage to locationImageTransitionName
-                    ,holder.phoneImage to phoneImageTransitionName)
+            val context = holder.itemView.context
+            val extras = FragmentNavigatorExtras(
+                    holder.image to prepareTransition(context, holder.image, R.string.image_transition_name)
+                    ,holder.name to prepareTransition(context, holder.name, R.string.name_transition_name)
+                    ,holder.speciality to prepareTransition(context, holder.speciality, R.string.speciality_transition_name)
+                    ,holder.location to prepareTransition(context, holder.location, R.string.location_transition_name)
+                    ,holder.phone to prepareTransition(context, holder.phone, R.string.phone_transition_name)
+                    ,holder.locationImage to prepareTransition(context, holder.locationImage, R.string.location_image_transition_name)
+                    ,holder.phoneImage to prepareTransition(context, holder.phoneImage, R.string.phone_image_transition_name))
             it.findNavController().navigate(R.id.action_doctor_detail, null, null, extras)
         })
     }
@@ -65,6 +54,12 @@ class DoctorAdapter: RecyclerView.Adapter<DoctorAdapter.DoctorViewHolder>() {
         doctors.clear()
         doctors.addAll(list)
         notifyDataSetChanged()
+    }
+
+    private fun prepareTransition(context: Context, view: View, id: Int): String{
+        val name = context.getString(id)
+        ViewCompat.setTransitionName(view, name)
+        return name
     }
 
     class DoctorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
