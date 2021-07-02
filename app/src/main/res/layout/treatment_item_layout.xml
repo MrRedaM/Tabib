@@ -92,7 +92,7 @@
                 app:layout_constraintStart_toStartOf="@+id/view"
                 app:layout_constraintTop_toTopOf="@+id/barrier3"
                 app:shapeAppearanceOverlay="@style/circleImageStyle"
-                tools:src="@drawable/doctor_harold" />
+                tools:src="@drawable/doctor1" />
 
             <TextView
                 android:id="@+id/textNameTreatment"

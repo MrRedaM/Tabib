@@ -30,7 +30,7 @@ class DoctorAdapter: RecyclerView.Adapter<DoctorAdapter.DoctorViewHolder>() {
         holder.speciality.text = doctor.speciality
         holder.phone.text = doctor.phone
         Glide.with(holder.itemView.context)
-            .load(R.drawable.doctor_harold)
+            .load(if (position % 2 == 0) R.drawable.doctor1 else R.drawable.doctor2)
             .into(holder.image)
         holder.itemView.setOnClickListener(View.OnClickListener {
             val context = holder.itemView.context

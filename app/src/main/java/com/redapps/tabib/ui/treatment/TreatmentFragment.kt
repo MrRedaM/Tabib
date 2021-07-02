@@ -77,9 +77,9 @@ class TreatmentFragment : Fragment() {
 
     private fun getRandomTreatments(count: Int): List<Treatment>{
         val list = mutableListOf<Treatment>()
-        val treatment = Treatment(1, 1, 1, Calendar.getInstance().time,
-            Calendar.getInstance().time, getRandomMedics(5))
         for (i in 1..count){
+            val treatment = Treatment(i, 1, 1, Calendar.getInstance().time,
+                Calendar.getInstance().time, getRandomMedics(5))
             list.add(treatment)
         }
         return list

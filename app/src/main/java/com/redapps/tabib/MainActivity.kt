@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
         // temp
         Glide.with(this)
-            .load(R.drawable.doctor_harold)
+            .load(R.drawable.patient)
             .into(binding.imageAccountMain)
     }
 

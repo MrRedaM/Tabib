@@ -54,8 +54,10 @@ class BookingFragment : Fragment() {
         val list = mutableListOf<Doctor>()
         val doctor = Doctor("Ahmed", "Doctor", "", "05 35 54 23 88",
         "Psychology", 0.0, 0.0)
+        val doctor1 = Doctor("Hadjer", "Doctor", "", "05 55 64 44 35",
+            "Cardiology", 0.0, 0.0)
         for (i in 1..count){
-            list.add(doctor)
+            if (i % 2 == 1) list.add(doctor) else list.add(doctor1)
         }
         return list
     }

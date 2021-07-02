@@ -23,9 +23,9 @@ class TreatmentAdapter : RecyclerView.Adapter<TreatmentAdapter.TreatmentViewHold
     override fun onBindViewHolder(holder: TreatmentViewHolder, position: Int) {
         val treatment = treatments[position]
         val context = holder.itemView.context
-        holder.textTitle.text = context.getString(R.string.treatment) + "#" + treatment.idTreatment
+        holder.textTitle.text = context.getString(R.string.treatment) + " " + treatment.idTreatment
         Glide.with(context)
-            .load(R.drawable.doctor_harold)
+            .load(if (position % 2 == 0) R.drawable.doctor1 else R.drawable.doctor2)
             .into(holder.imageDoc)
         holder.medicRecycler.layoutManager = LinearLayoutManager(context)
         val adapter = MedicAdapter()

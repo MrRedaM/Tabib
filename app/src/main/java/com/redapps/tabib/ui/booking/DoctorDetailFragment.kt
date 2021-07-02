@@ -51,7 +51,7 @@ class DoctorDetailFragment : Fragment() {
         _binding = FragmentDoctorDetailBinding.inflate(inflater, container, false)
 
         Glide.with(requireActivity())
-            .load(R.drawable.doctor_harold)
+            .load(R.drawable.doctor1)
             .into(binding.imageDoctorDetail)
 
         binding.buttonBackDoctorDetail.setOnClickListener {
