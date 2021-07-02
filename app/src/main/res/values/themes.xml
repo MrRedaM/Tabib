@@ -22,7 +22,9 @@
         <item name="android:windowContentTransitions">true</item>
         <item name="calendarItemBackgroundColor">@color/light_grey</item>
         <item name="calendarItemSelectedBackgroundColor">?attr/colorPrimary</item>
-        <item name="bigTimeColor">?attr/colorPrimary</item>
+        <item name="bigTimeColor">?attr/colorPrimary</item> <!-- Booking item time color -->
         <item name="imageButtonBackgroundColor">@color/light_grey</item>
+        <item name="treatmentCardBackgroundColor">?attr/colorPrimary</item>
+        <item name="textColorOnTreatmentCard">?attr/colorOnPrimary</item>
     </style>
 </resources>

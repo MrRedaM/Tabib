@@ -4,16 +4,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager2.widget.CompositePageTransformer
+import androidx.viewpager2.widget.MarginPageTransformer
+import androidx.viewpager2.widget.ViewPager2
 import com.redapps.tabib.databinding.FragmentTreatmentBinding
+import com.redapps.tabib.model.Medicament
+import com.redapps.tabib.model.Treatment
+import java.util.*
+import kotlin.math.abs
 
 class TreatmentFragment : Fragment() {
 
     private lateinit var treatmentViewModel: TreatmentViewModel
     private var _binding: FragmentTreatmentBinding? = null
+
+    private val treatmentAdapter = TreatmentAdapter()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -29,7 +36,63 @@ class TreatmentFragment : Fragment() {
 
         _binding = FragmentTreatmentBinding.inflate(inflater, container, false)
 
+        initTreatmentsPager()
+        initMedicamentRecycler()
+
+        // temp
+        updateTreatments(getRandomTreatments(4))
+
         return binding.root
+    }
+
+    private fun initMedicamentRecycler() {
+
+    }
+
+    private fun initTreatmentsPager() {
+        val pager = binding.pagerTreatment
+        pager.adapter = treatmentAdapter
+        pager.clipToPadding = false
+        pager.clipChildren = false
+        pager.offscreenPageLimit = 2
+        val transformer = CompositePageTransformer()
+        transformer.addTransformer(MarginPageTransformer(4))
+        transformer.addTransformer { page, position ->
+            val r = 1 - abs(position)
+            page.scaleY = 0.85f + r * 0.15f
+        }
+        pager.setPageTransformer(transformer)
+        pager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                // update medics
+            }
+        })
+    }
+
+    private fun updateTreatments(newTreatments: List<Treatment>){
+        treatmentAdapter.setTreatments(newTreatments)
+        binding.textTreatmentNumber.text = newTreatments.size.toString()
+    }
+
+    private fun getRandomTreatments(count: Int): List<Treatment>{
+        val list = mutableListOf<Treatment>()
+        val treatment = Treatment(1, 1, 1, Calendar.getInstance().time,
+            Calendar.getInstance().time, getRandomMedics(5))
+        for (i in 1..count){
+            list.add(treatment)
+        }
+        return list
+    }
+
+    private fun getRandomMedics(count: Int): List<Medicament> {
+        val list = mutableListOf<Medicament>()
+        val medic = Medicament(1, "Doliprane", 2)
+        val medic1 = Medicament(2, "Efferalgan", 2)
+        for (i in 1..count){
+            if (i % 2 == 0) list.add(medic) else list.add(medic1)
+        }
+        return list
     }
 
     override fun onDestroyView() {

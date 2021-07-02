@@ -23,5 +23,7 @@
         <item name="calendarItemSelectedBackgroundColor">?attr/colorPrimary</item>
         <item name="bigTimeColor">?attr/colorPrimary</item>
         <item name="imageButtonBackgroundColor">@color/darker_foreground</item>
+        <item name="treatmentCardBackgroundColor">?attr/colorPrimary</item>
+        <item name="textColorOnTreatmentCard">?attr/colorOnPrimary</item>
     </style>
 </resources>

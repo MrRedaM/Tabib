@@ -14,5 +14,8 @@
     <string name="phone_image_transition_name">phone_image_transition_name</string>
     <string name="location_image_transition_name">location_image_transition_name</string>
     <string name="card_transition_name">card_transition_name</string>
+    <string name="you_have">You have</string>
+    <string name="actif_treatments">actif treatments</string>
+    <string name="treatment">Treatment</string>
 
 </resources>
