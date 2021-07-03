@@ -17,6 +17,7 @@
         android:background="@drawable/search_edit_background"
         android:padding="8dp"
         android:drawableStart="@drawable/ic_round_search_24"
+        android:drawablePadding="16dp"
         android:inputType="textPersonName"
         android:hint="@string/search_for_a_doctor"
         app:layout_constraintEnd_toEndOf="parent"
