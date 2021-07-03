@@ -19,5 +19,6 @@
     <string name="treatment">Treatment</string>
     <string name="you_don_t_have_any_actif_treatment">You don\'t have any actif treatment</string>
     <string name="no_doctors">There is no doctor yet</string>
+    <string name="my_appointments">My Appointments</string>
 
 </resources>
