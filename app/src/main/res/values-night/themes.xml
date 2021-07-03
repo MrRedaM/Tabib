@@ -12,6 +12,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?android:windowBackground</item>
         <!-- Customize your theme here. -->
+        <item name="background">@color/dark_background</item>
         <item name="android:windowBackground">@color/dark_background</item>
         <item name="cardBackgroundColor">@color/on_dark_background</item>
         <item name="fontFamily">@font/montserrat</item>
@@ -25,5 +26,16 @@
         <item name="imageButtonBackgroundColor">@color/darker_foreground</item>
         <item name="treatmentCardBackgroundColor">?attr/colorPrimary</item>
         <item name="textColorOnTreatmentCard">?attr/colorOnPrimary</item>
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+    </style>
+
+    <style name="AppBottomSheetDialogTheme"
+        parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+    </style>
+
+    <style name="AppModalStyle"
+        parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/rounded_background</item>
     </style>
 </resources>

@@ -1,13 +1,10 @@
 package com.redapps.tabib.ui.booking
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.redapps.tabib.viewmodel.BaseViewModel
+import com.redapps.tabib.model.Doctor
 
-class BookingViewModel : ViewModel() {
+class BookingViewModel : BaseViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
-    }
-    val text: LiveData<String> = _text
+
 }
