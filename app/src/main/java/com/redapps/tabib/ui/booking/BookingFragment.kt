@@ -18,6 +18,8 @@ class BookingFragment : Fragment() {
     private lateinit var bookingViewModel: BookingViewModel
     private var _binding: FragmentBookingBinding? = null
 
+    private val doctorAdapter = DoctorAdapter()
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -34,6 +36,9 @@ class BookingFragment : Fragment() {
 
         initDoctorRecycler()
 
+        // tenp
+        updateDoctors(getRandomDoctors(10))
+
         return binding.root
     }
 
@@ -42,12 +47,19 @@ class BookingFragment : Fragment() {
         _binding = null
     }
 
+    private fun updateDoctors(newDoctors: List<Doctor>){
+        if (newDoctors.isNotEmpty()){
+            binding.emptyDoctors.visibility = View.GONE
+        } else {
+            binding.emptyDoctors.visibility = View.VISIBLE
+        }
+        doctorAdapter.setDoctors(newDoctors)
+    }
+
     private fun initDoctorRecycler(){
         val recycler = binding.recyclerDoctorBooking
-        val adapter = DoctorAdapter()
-        recycler.adapter = adapter
+        recycler.adapter = doctorAdapter
         recycler.layoutManager = LinearLayoutManager(context)
-        adapter.setDoctors(getRandomDoctors(10))
     }
 
     private fun getRandomDoctors(count: Int): List<Doctor>{

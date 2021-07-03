@@ -37,16 +37,11 @@ class TreatmentFragment : Fragment() {
         _binding = FragmentTreatmentBinding.inflate(inflater, container, false)
 
         initTreatmentsPager()
-        initMedicamentRecycler()
 
         // temp
         updateTreatments(getRandomTreatments(4))
 
         return binding.root
-    }
-
-    private fun initMedicamentRecycler() {
-
     }
 
     private fun initTreatmentsPager() {
@@ -71,6 +66,11 @@ class TreatmentFragment : Fragment() {
     }
 
     private fun updateTreatments(newTreatments: List<Treatment>){
+        if (newTreatments.isNotEmpty()){
+            binding.emptyLayout.visibility = View.GONE
+        } else {
+            binding.emptyLayout.visibility = View.VISIBLE
+        }
         treatmentAdapter.setTreatments(newTreatments)
         binding.textTreatmentNumber.text = newTreatments.size.toString()
     }

@@ -57,4 +57,7 @@ dependencies {
 
     // Single Row Calendar
     implementation 'com.michalsvec:single-row-calednar:1.0.0'
+
+    // Lottie
+    implementation 'com.airbnb.android:lottie:3.7.0'
 }
