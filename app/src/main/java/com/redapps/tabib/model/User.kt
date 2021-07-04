@@ -5,9 +5,11 @@ data class User(
     var name : String,
     var surname : String,
     var phone : String,
-    val docSpeciality: String = "",
-    val docAdrLongi: String = "",
-    val docAdrLati: String = ""
+    val startHour: String,
+    val endHour: String,
+    val docSpeciality: String,
+    val docAdrLongi: String,
+    val docAdrLati: String
 ) {
     companion object{
         val DOCTOR = 0

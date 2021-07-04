@@ -24,7 +24,7 @@ class BookingAdapter(val fragment: Fragment) : RecyclerView.Adapter<BookingAdapt
 
     override fun onBindViewHolder(holder: BookingViewHolder, position: Int) {
         val booking = bookings[position]
-        holder.date.text = booking.startDate.dateToString("dd-MMMM")
+        holder.date.text = booking.startDate.dateToString("dd MMMM")
         holder.timeStart.text = booking.startDate.dateToString("hh:mm")
         holder.timeEnd.text = booking.endDate.dateToString("hh:mm")
         holder.itemView.setOnClickListener {
@@ -48,6 +48,10 @@ class BookingAdapter(val fragment: Fragment) : RecyclerView.Adapter<BookingAdapt
 
         //return the formatted date string
         return dateFormatter.format(this)
+    }
+
+    private fun String.toDate(format: String): Date?{
+        return SimpleDateFormat(format).parse(this)
     }
 
     private fun showReserveDialog(fragment: Fragment){

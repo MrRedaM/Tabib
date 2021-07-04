@@ -31,10 +31,10 @@ class LoginActivity : AppCompatActivity() {
             // already logged in
             val gson = Gson()
             val user : User = gson.fromJson(userJson, User::class.java)
-            if (user.docSpeciality != ""){
-                startDoctorActivity()
+            if (user.docSpeciality != null){
+                startDoctorActivity(user)
             } else  {
-                startPatientActivity()
+                startPatientActivity(user)
             }
         }
 
@@ -53,9 +53,9 @@ class LoginActivity : AppCompatActivity() {
                         val user = response.body()
                         ToastUtils.longToast(applicationContext, "Logged in")
                         if (user!!.docSpeciality != null){
-                            startDoctorActivity()
+                            startDoctorActivity(user)
                         } else  {
-                            startPatientActivity()
+                            startPatientActivity(user)
                         }
                     } else {
                         ToastUtils.longToast(applicationContext, "Wrong phone or password")
@@ -69,23 +69,17 @@ class LoginActivity : AppCompatActivity() {
                 }
 
             })
-
-            // temp
-            //startPatientActivity()
-        }
-
-        // temp
-        binding.textForgotPass.setOnClickListener {
-            startDoctorActivity()
         }
     }
 
-    private fun startPatientActivity(){
+    private fun startPatientActivity(user: User){
+        PrefUtils.with(this).save(PrefUtils.Keys.USER, Gson().toJson(user))
         startActivity(Intent(this, PatientActivity::class.java))
         finish()
     }
 
-    private fun startDoctorActivity(){
+    private fun startDoctorActivity(user: User){
+        PrefUtils.with(this).save(PrefUtils.Keys.USER, Gson().toJson(user))
         startActivity(Intent(this, DoctorActivity::class.java))
         finish()
     }

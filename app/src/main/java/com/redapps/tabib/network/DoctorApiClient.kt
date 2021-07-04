@@ -1,6 +1,7 @@
 package com.redapps.tabib.network
 
 import com.google.gson.GsonBuilder
+import com.redapps.tabib.utils.AppConstants
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -9,7 +10,6 @@ import java.util.concurrent.TimeUnit
 
 object DoctorApiClient {
 
-    private const val BASE_URL = "https://8fef409a9816.ngrok.io"
 
     val instance: DoctorApiService = Retrofit.Builder().run {
 
@@ -25,7 +25,7 @@ object DoctorApiClient {
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
             .create()
 
-        baseUrl(BASE_URL)
+        baseUrl(AppConstants.BASE_URL)
         addConverterFactory(GsonConverterFactory.create(gson))
         client(client)
         build()

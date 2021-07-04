@@ -40,32 +40,42 @@ class BookingFragment : Fragment() {
 
         _binding = FragmentBookingBinding.inflate(inflater, container, false)
 
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Setups
         initDoctorRecycler()
         setupSearch()
 
-        // temp
-        updateDoctors(getRandomDoctors(0))
+        // On refresh
         binding.root.setOnRefreshListener {
-            updateDoctors(getRandomDoctors(10))
-            binding.root.isRefreshing = false
+            fetchDoctors()
         }
+
+        // Initial fetch
+        fetchDoctors()
+    }
+
+    private fun fetchDoctors(){
         DoctorApiClient.instance.getDoctors().enqueue(object : Callback<List<Doctor>>{
             override fun onResponse(call: Call<List<Doctor>>, response: Response<List<Doctor>>) {
                 if (response.isSuccessful){
-                    ToastUtils.longToast(requireContext(), "Get Docs success!")
+                    //ToastUtils.longToast(requireContext(), "Get Docs success!")
                     updateDoctors(response.body()!!)
                 } else {
                     ToastUtils.longToast(requireContext(), "Error  : " + response.message())
                 }
+                binding.root.isRefreshing = false
             }
 
             override fun onFailure(call: Call<List<Doctor>>, t: Throwable) {
                 ToastUtils.longToast(requireContext(), "Failed : " + t.message)
+                binding.root.isRefreshing = false
             }
-
         })
-
-        return binding.root
     }
 
     private fun setupSearch() {

@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.redapps.tabib.R
 import com.redapps.tabib.model.Doctor
+import com.redapps.tabib.utils.AppConstants
 
 class DoctorAdapter: RecyclerView.Adapter<DoctorAdapter.DoctorViewHolder>() {
 
@@ -33,7 +34,7 @@ class DoctorAdapter: RecyclerView.Adapter<DoctorAdapter.DoctorViewHolder>() {
         holder.speciality.text = doctor.speciality
         holder.phone.text = doctor.phone
         Glide.with(holder.itemView.context)
-            .load(doctor.photo)
+            .load(AppConstants.BASE_URL + doctor.photo)
             .placeholder(R.drawable.doctor1)
             .into(holder.image)
         holder.itemView.setOnClickListener(View.OnClickListener {

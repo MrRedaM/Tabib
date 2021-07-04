@@ -3,6 +3,6 @@ package com.redapps.tabib.utils
 class AppConstants {
 
     companion object{
-        const val KEY_QR_CODE = "KEY_QR_CODE"
+        const val BASE_URL = "https://8fef409a9816.ngrok.io"
     }
 }

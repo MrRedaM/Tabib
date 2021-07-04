@@ -26,6 +26,11 @@ import com.redapps.tabib.databinding.FragmentBookingBinding
 import com.redapps.tabib.databinding.FragmentDoctorDetailBinding
 import com.redapps.tabib.model.Booking
 import com.redapps.tabib.model.Doctor
+import com.redapps.tabib.utils.AppConstants
+import com.redapps.tabib.utils.ToastUtils
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -78,7 +83,7 @@ class DoctorDetailFragment : Fragment() {
         binding.textSpecialityDoctorDetail.text = doctor.speciality
         binding.textPhoneDoctorDetail.text = doctor.phone
         Glide.with(requireActivity())
-            .load(doctor.photo)
+            .load(AppConstants.BASE_URL + doctor.photo)
             .placeholder(R.drawable.doctor1)
             .into(binding.imageDoctorDetail)
     }
@@ -95,7 +100,11 @@ class DoctorDetailFragment : Fragment() {
                 isSelected: Boolean
             ): Int {
                 // return item layout files, which you have created
-                return if (!isSelected) {
+                val cal = Calendar.getInstance()
+                cal.time = date
+                return if (cal[Calendar.DAY_OF_WEEK] == Calendar.FRIDAY || cal[Calendar.DAY_OF_WEEK] == Calendar.SATURDAY) {
+                    R.layout.calendar_item_disbled
+                } else if (!isSelected) {
                     R.layout.calendar_item_layout
                 } else {
                     R.layout.calendar_item_selected_layout
@@ -120,7 +129,9 @@ class DoctorDetailFragment : Fragment() {
         val mySelectionManager = object : CalendarSelectionManager {
             override fun canBeItemSelected(position: Int, date: Date): Boolean {
                 // return true if item can be selected
-                return true
+                val cal = Calendar.getInstance()
+                cal.time = date
+                return !(cal[Calendar.DAY_OF_WEEK] == Calendar.FRIDAY || cal[Calendar.DAY_OF_WEEK] == Calendar.SATURDAY)
             }
         }
 
@@ -128,7 +139,7 @@ class DoctorDetailFragment : Fragment() {
         val myCalendarChangesObserver = object : CalendarChangesObserver {
 
             override fun whenSelectionChanged(isSelected: Boolean, position: Int, date: Date) {
-                bookingAdapter.setBookings(getRandomBookings(4))
+                bookingAdapter.setBookings(getBookingsFromInterval(date, doctor.startHour, doctor.endHour))
                 super.whenSelectionChanged(isSelected, position, date)
             }
         }
@@ -171,7 +182,50 @@ class DoctorDetailFragment : Fragment() {
         val recycler = binding.recyclerTimeBooking
         recycler.adapter = bookingAdapter
         recycler.layoutManager = LinearLayoutManager(context)
-        bookingAdapter.setBookings(getRandomBookings(4))
+
+        bookingAdapter.setBookings(getBookingsFromInterval(Calendar.getInstance().time, doctor.startHour, doctor.endHour))
+    }
+
+    private fun getBookingsFromInterval(date: Date, start: String, end: String): MutableList<Booking>{
+        val result = mutableListOf<Booking>()
+        val cal = Calendar.getInstance()
+        val endCal = Calendar.getInstance()
+        endCal.time = end.toDate("hh:mm")
+        endCal.set(date.dateToString("yyyy-MM-dd").split("-")[0].toInt(),
+            date.dateToString("yyyy-MM-dd").split("-")[1].toInt() - 1,
+            date.dateToString("yyyy-MM-dd").split("-")[2].toInt())
+        cal.time = start.toDate("hh:mm")
+        cal.set(date.dateToString("yyyy-MM-dd").split("-")[0].toInt(),
+            date.dateToString("yyyy-MM-dd").split("-")[1].toInt() - 1,
+            date.dateToString("yyyy-MM-dd").split("-")[2].toInt())
+        //endCal.time = date
+        //endCal.set(Calendar.HOUR, start.split(":")[0].toInt())
+        //endCal.set(Calendar.MINUTE, start.split(":")[1].toInt())
+        //cal.time = date
+        //cal.set(Calendar.HOUR, start.split(":")[0].toInt())
+        //cal.set(Calendar.MINUTE, start.split(":")[1].toInt())
+        var stop = false
+        while (!stop){
+            val startCal = Calendar.getInstance()
+            startCal.time = cal.time
+            cal.set(Calendar.MINUTE, cal[Calendar.MINUTE] + 30)
+            if (cal.before(endCal)) {
+                result.add(Booking(false, startCal.time, cal.time))
+            } else stop = true
+        }
+        return result
+    }
+
+    private fun Date.dateToString(format: String): String {
+        //simple date formatter
+        val dateFormatter = SimpleDateFormat(format, Locale.getDefault())
+
+        //return the formatted date string
+        return dateFormatter.format(this)
+    }
+
+    private fun String.toDate(format: String): Date?{
+        return SimpleDateFormat(format).parse(this)
     }
 
     private fun getDatesOfPreviousMonth(): List<Date> {
