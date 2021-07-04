@@ -11,6 +11,7 @@ import com.redapps.tabib.model.User
 import com.redapps.tabib.model.UserLogin
 import com.redapps.tabib.network.AuthApiClient
 import com.redapps.tabib.utils.ToastUtils
+import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -42,23 +43,35 @@ class LoginActivity : AppCompatActivity() {
             val phone = binding.editPhoneLogin.text.toString()
             val password = binding.editPasswordLogin.text.toString()
 
-            /*AuthApiClient.instance.login(phone, password).enqueue(object : Callback<String>{
-                override fun onResponse(call: Call<String>, response: Response<String>) {
+            val requestBody = MultipartBody.Builder().setType(MultipartBody.FORM)
+                .addFormDataPart("phone", phone)
+                .addFormDataPart("password", password)
+                .build()
+            AuthApiClient.instance.login(requestBody).enqueue(object : Callback<User>{
+                override fun onResponse(call: Call<User>, response: Response<User>) {
                     if (response.isSuccessful){
-                        ToastUtils.longToast(applicationContext, response.body())
+                        val user = response.body()
+                        ToastUtils.longToast(applicationContext, "Logged in")
+                        if (user!!.docSpeciality != null){
+                            startDoctorActivity()
+                        } else  {
+                            startPatientActivity()
+                        }
                     } else {
-                        ToastUtils.longToast(applicationContext, "Error : " + response.message())
+                        ToastUtils.longToast(applicationContext, "Wrong phone or password")
+                        binding.editPhoneLogin.setError("Check your phone")
+                        binding.editPasswordLogin.setError("Check your password")
                     }
                 }
 
-                override fun onFailure(call: Call<String>, t: Throwable) {
+                override fun onFailure(call: Call<User>, t: Throwable) {
                     ToastUtils.longToast(applicationContext, "Failed : " + t.message)
                 }
 
-            })*/
+            })
 
             // temp
-            startPatientActivity()
+            //startPatientActivity()
         }
 
         // temp
