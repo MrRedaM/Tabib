@@ -15,7 +15,7 @@ class AppointmentFragment : Fragment() {
     private lateinit var appointmentViewModel: AppointmentViewModel
     private var _binding: FragmentAppointmentBinding? = null
 
-    val adapter = AppointmentAdapter()
+    val adapter = AppointmentAdapter(this)
 
     // This property is only valid between onCreateView and
     // onDestroyView.
