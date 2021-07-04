@@ -4,14 +4,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.redapps.tabib.R
 import com.redapps.tabib.model.Booking
 import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class BookingAdapter : RecyclerView.Adapter<BookingAdapter.BookingViewHolder>() {
+class BookingAdapter(val fragment: Fragment) : RecyclerView.Adapter<BookingAdapter.BookingViewHolder>() {
 
     private val bookings = mutableListOf<Booking>()
 
@@ -25,6 +27,9 @@ class BookingAdapter : RecyclerView.Adapter<BookingAdapter.BookingViewHolder>() 
         holder.date.text = booking.startDate.dateToString("dd-MMMM")
         holder.timeStart.text = booking.startDate.dateToString("hh:mm")
         holder.timeEnd.text = booking.endDate.dateToString("hh:mm")
+        holder.itemView.setOnClickListener {
+            showReserveDialog(fragment)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -43,6 +48,13 @@ class BookingAdapter : RecyclerView.Adapter<BookingAdapter.BookingViewHolder>() 
 
         //return the formatted date string
         return dateFormatter.format(this)
+    }
+
+    private fun showReserveDialog(fragment: Fragment){
+        val dialog = BottomSheetDialog(fragment.requireContext())
+        val view = fragment.layoutInflater.inflate(R.layout.reserve_bottomsheet_layout, null)
+        dialog.setContentView(view)
+        dialog.show()
     }
 
     class BookingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){

@@ -34,7 +34,7 @@ class DoctorDetailFragment : Fragment() {
     private val binding get() = _binding!!
     private var currentMonth = 0
     private val calendar = Calendar.getInstance()
-    private val bookingAdapter = BookingAdapter()
+    private val bookingAdapter = BookingAdapter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

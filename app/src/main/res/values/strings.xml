@@ -31,5 +31,7 @@
     <string name="close">Close</string>
     <string name="cancel">Cancel</string>
     <string name="scan_appointment">Scan Appointment</string>
+    <string name="reserve">Reserve</string>
+    <string name="confirm_reservation">Confirm Reservation</string>
 
 </resources>
