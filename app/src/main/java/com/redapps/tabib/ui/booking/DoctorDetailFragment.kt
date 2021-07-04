@@ -10,9 +10,11 @@ import androidx.core.view.ViewCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.TransitionInflater
 import com.bumptech.glide.Glide
+import com.google.gson.Gson
 import com.michalsvec.singlerowcalendar.calendar.CalendarChangesObserver
 import com.michalsvec.singlerowcalendar.calendar.CalendarViewManager
 import com.michalsvec.singlerowcalendar.calendar.SingleRowCalendar
@@ -35,6 +37,8 @@ class DoctorDetailFragment : Fragment() {
     private var currentMonth = 0
     private val calendar = Calendar.getInstance()
     private val bookingAdapter = BookingAdapter(this)
+    private val args: DoctorDetailFragmentArgs by navArgs()
+    private lateinit var doctor: Doctor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,9 +54,16 @@ class DoctorDetailFragment : Fragment() {
 
         _binding = FragmentDoctorDetailBinding.inflate(inflater, container, false)
 
-        Glide.with(requireActivity())
-            .load(R.drawable.doctor1)
-            .into(binding.imageDoctorDetail)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val gson = Gson()
+        doctor = gson.fromJson(args.doc, Doctor::class.java)
+
+        setupViews(doctor)
 
         binding.buttonBackDoctorDetail.setOnClickListener {
             findNavController().navigate(R.id.action_nav_doctor_detail_to_navigation_booking)
@@ -60,8 +71,16 @@ class DoctorDetailFragment : Fragment() {
 
         initCalendar()
         initBookingRecycler()
+    }
 
-        return binding.root
+    private fun setupViews(doctor: Doctor) {
+        binding.textNameDoctorDetail.text = doctor.lastName + " " + doctor.firstName
+        binding.textSpecialityDoctorDetail.text = doctor.speciality
+        binding.textPhoneDoctorDetail.text = doctor.phone
+        Glide.with(requireActivity())
+            .load(doctor.photo)
+            .placeholder(R.drawable.doctor1)
+            .into(binding.imageDoctorDetail)
     }
 
     private fun initCalendar(){

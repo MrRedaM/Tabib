@@ -12,6 +12,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.gson.Gson
 import com.redapps.tabib.R
 import com.redapps.tabib.model.Doctor
 
@@ -32,7 +33,8 @@ class DoctorAdapter: RecyclerView.Adapter<DoctorAdapter.DoctorViewHolder>() {
         holder.speciality.text = doctor.speciality
         holder.phone.text = doctor.phone
         Glide.with(holder.itemView.context)
-            .load(if (doctor.firstName == "Ahmed") R.drawable.doctor1 else R.drawable.doctor2)
+            .load(doctor.photo)
+            .placeholder(R.drawable.doctor1)
             .into(holder.image)
         holder.itemView.setOnClickListener(View.OnClickListener {
             val context = holder.itemView.context
@@ -44,7 +46,11 @@ class DoctorAdapter: RecyclerView.Adapter<DoctorAdapter.DoctorViewHolder>() {
                     ,holder.phone to prepareTransition(context, holder.phone, R.string.phone_transition_name)
                     ,holder.locationImage to prepareTransition(context, holder.locationImage, R.string.location_image_transition_name)
                     ,holder.phoneImage to prepareTransition(context, holder.phoneImage, R.string.phone_image_transition_name))
-            it.findNavController().navigate(R.id.action_doctor_detail, null, null, extras)
+
+            val gson = Gson()
+            val docJson = gson.toJson(doctor)
+
+            it.findNavController().navigate(BookingFragmentDirections.actionDoctorDetail(docJson), extras)
         })
     }
 

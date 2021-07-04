@@ -36,5 +36,8 @@
             app:destination="@id/navigation_booking"
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out" />
+        <argument
+            android:name="doc"
+            app:argType="string" />
     </fragment>
 </navigation>
