@@ -39,7 +39,11 @@ class BookingFragment : Fragment() {
         setupSearch()
 
         // tenp
-        updateDoctors(getRandomDoctors(10))
+        updateDoctors(getRandomDoctors(0))
+        binding.root.setOnRefreshListener {
+            updateDoctors(getRandomDoctors(10))
+            binding.root.isRefreshing = false
+        }
 
         return binding.root
     }

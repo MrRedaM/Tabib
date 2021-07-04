@@ -17,8 +17,8 @@
     <string name="you_have">You have</string>
     <string name="actif_treatments">actif treatments</string>
     <string name="treatment">Treatment</string>
-    <string name="you_don_t_have_any_actif_treatment">You don\'t have any actif treatment</string>
-    <string name="no_doctors">There is no doctor yet</string>
+    <string name="you_don_t_have_any_actif_treatment">You don\'t have any active treatment \n(Swipe to refresh)</string>
+    <string name="no_doctors">There is no doctor yet \n(swipe to refresh)</string>
     <string name="my_appointments">My Appointments</string>
     <string name="settings">Settings</string>
     <string name="logout">Logout</string>
@@ -33,5 +33,6 @@
     <string name="scan_appointment">Scan Appointment</string>
     <string name="reserve">Reserve</string>
     <string name="confirm_reservation">Confirm Reservation</string>
+    <string name="empty_appointment">You don\'t have any appointment\n (Swipe to refresh)</string>
 
 </resources>

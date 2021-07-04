@@ -39,7 +39,11 @@ class TreatmentFragment : Fragment() {
         initTreatmentsPager()
 
         // temp
-        updateTreatments(getRandomTreatments(4))
+        updateTreatments(getRandomTreatments(0))
+        binding.root.setOnRefreshListener {
+            updateTreatments(getRandomTreatments(4))
+            binding.root.isRefreshing = false
+        }
 
         return binding.root
     }

@@ -34,12 +34,21 @@ class AppointmentFragment : Fragment() {
         initRecycler()
 
         // temp
-        updateAppointments(getRandomAppointments(2))
+        updateAppointments(getRandomAppointments(0))
+        binding.root.setOnRefreshListener {
+            updateAppointments(getRandomAppointments(2))
+            binding.root.isRefreshing = false
+        }
 
         return binding.root
     }
 
     private fun updateAppointments(newAppointments: List<Appointment>){
+        if (newAppointments.isNotEmpty()){
+            binding.emptyLayout.visibility = View.GONE
+        } else {
+            binding.emptyLayout.visibility = View.VISIBLE
+        }
         adapter.setAppointments(newAppointments)
     }
 
