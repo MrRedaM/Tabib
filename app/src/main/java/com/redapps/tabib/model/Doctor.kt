@@ -1,11 +1,15 @@
 package com.redapps.tabib.model
 
+import com.google.gson.annotations.SerializedName
+
 data class Doctor(
-    var firstName: String,
-    var lastName: String,
-    var photo: String,
-    var phone: String,
-    var speciality: String,
-    var latitude: Double,
-    var longitude: Double
+    @SerializedName("surname") var firstName: String,
+    @SerializedName("name") var lastName: String,
+    @SerializedName("docPicUrl") var photo: String,
+    @SerializedName("phone") var phone: String,
+    @SerializedName("docSpeciality") var speciality: String,
+    @SerializedName("docAdrLati") var latitude: Double,
+    @SerializedName("docAdrLongi") var longitude: Double,
+    @SerializedName("startHour") var startHour: String,
+    @SerializedName("endHour") var endHour: String
 )

@@ -1,10 +1,13 @@
 package com.redapps.tabib.model
 
 data class User(
-    var idUser : Int,
-    var lastMame : String,
-    var firstName : String,
-    var type : Int
+    var id : Int,
+    var name : String,
+    var surname : String,
+    var phone : String,
+    val docSpeciality: String = "",
+    val docAdrLongi: String = "",
+    val docAdrLati: String = ""
 ) {
     companion object{
         val DOCTOR = 0

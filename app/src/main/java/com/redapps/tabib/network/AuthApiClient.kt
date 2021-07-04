@@ -7,11 +7,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 
-object ApiClient {
+object AuthApiClient {
 
-    private const val BASE_URL = "https://8fef409a9816.ngrok.io"
+    private const val BASE_URL = "https://8fef409a9816.ngrok.io/"
 
-    val instance: ApiService = Retrofit.Builder().run {
+    val instance: AuthApiService = Retrofit.Builder().run {
 
         val client = OkHttpClient.Builder()
             .connectTimeout(60, TimeUnit.SECONDS)
@@ -29,6 +29,6 @@ object ApiClient {
         addConverterFactory(GsonConverterFactory.create(gson))
         client(client)
         build()
-    }.create(ApiService::class.java)
+    }.create(AuthApiService::class.java)
 
 }

@@ -55,7 +55,9 @@ class DoctorAdapter: RecyclerView.Adapter<DoctorAdapter.DoctorViewHolder>() {
     fun setDoctors(list: List<Doctor>){
         doctors.clear()
         doctors.addAll(list)
-        filterDoctors(querySave)
+        //filterDoctors(querySave)
+        doctorsFiltered = list
+        notifyDataSetChanged()
     }
 
     fun filterDoctors(query: String){
