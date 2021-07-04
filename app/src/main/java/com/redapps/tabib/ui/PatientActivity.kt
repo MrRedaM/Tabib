@@ -14,6 +14,7 @@ import com.clovertech.autolib.utils.PrefUtils
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.redapps.tabib.R
 import com.redapps.tabib.databinding.ActivityMainBinding
+import com.redapps.tabib.utils.MenuUtils
 
 class PatientActivity : AppCompatActivity() {
 
@@ -27,7 +28,7 @@ class PatientActivity : AppCompatActivity() {
 
         // Top account image on click
         binding.imageAccountMain.setOnClickListener(View.OnClickListener {
-            showAccountDialog()
+            MenuUtils.showAccountDialog(this)
         })
 
         // setups
@@ -66,26 +67,5 @@ class PatientActivity : AppCompatActivity() {
         }
     }
 
-    private fun showAccountDialog(){
-        val dialog = BottomSheetDialog(this)
-        val view = layoutInflater.inflate(R.layout.account_bottomsheet_layout, null)
-        dialog.setContentView(view)
 
-        val logoutButton = view.findViewById<TextView>(R.id.textLogout)
-        val settingButton = view.findViewById<TextView>(R.id.textSettings)
-
-        // Setup onClickListeners
-        logoutButton.setOnClickListener {
-            // Delete user from prefs
-            PrefUtils.with(this).save(PrefUtils.Keys.USER, "")
-            // Goto login activity
-            startActivity(Intent(this, LoginActivity::class.java))
-            finish()
-        }
-        settingButton.setOnClickListener {
-
-        }
-
-        dialog.show()
-    }
 }

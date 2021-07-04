@@ -7,7 +7,7 @@
     android:paddingVertical="16dp">
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/imageView8"
+        android:id="@+id/imageAccountMenu"
         android:layout_width="86dp"
         android:layout_height="86dp"
         android:layout_gravity="center"

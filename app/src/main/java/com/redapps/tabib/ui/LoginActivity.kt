@@ -39,6 +39,11 @@ class LoginActivity : AppCompatActivity() {
             // temp
             startPatientActivity()
         })
+
+        // temp
+        binding.textForgotPass.setOnClickListener {
+            startDoctorActivity()
+        }
     }
 
     private fun startPatientActivity(){
