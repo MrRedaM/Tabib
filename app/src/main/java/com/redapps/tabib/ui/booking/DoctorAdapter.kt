@@ -17,7 +17,9 @@ import com.redapps.tabib.model.Doctor
 
 class DoctorAdapter: RecyclerView.Adapter<DoctorAdapter.DoctorViewHolder>() {
 
-    private val doctors = mutableListOf<Doctor>()
+    private val doctors = mutableListOf<Doctor>() // All doctors
+    private var doctorsFiltered = listOf<Doctor>()// To filter doctors with search, filters...
+    private var querySave : String = ""
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DoctorViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.doctor_item_layout, parent, false)
@@ -25,12 +27,12 @@ class DoctorAdapter: RecyclerView.Adapter<DoctorAdapter.DoctorViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: DoctorViewHolder, position: Int) {
-        val doctor = doctors[position]
+        val doctor = doctorsFiltered[position]
         holder.name.text = doctor.lastName + " " + doctor.firstName
         holder.speciality.text = doctor.speciality
         holder.phone.text = doctor.phone
         Glide.with(holder.itemView.context)
-            .load(if (position % 2 == 0) R.drawable.doctor1 else R.drawable.doctor2)
+            .load(if (doctor.firstName == "Ahmed") R.drawable.doctor1 else R.drawable.doctor2)
             .into(holder.image)
         holder.itemView.setOnClickListener(View.OnClickListener {
             val context = holder.itemView.context
@@ -47,12 +49,19 @@ class DoctorAdapter: RecyclerView.Adapter<DoctorAdapter.DoctorViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return doctors.size
+        return doctorsFiltered.size
     }
 
     fun setDoctors(list: List<Doctor>){
         doctors.clear()
         doctors.addAll(list)
+        filterDoctors(querySave)
+    }
+
+    fun filterDoctors(query: String){
+        querySave = query
+        doctorsFiltered = doctors.filter {
+            it.firstName.contains(querySave, true) || it.lastName.contains(query, true) || it.speciality.contains(query, true)}
         notifyDataSetChanged()
     }
 

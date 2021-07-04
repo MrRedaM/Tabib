@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.ViewCompat
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -35,11 +36,18 @@ class BookingFragment : Fragment() {
         _binding = FragmentBookingBinding.inflate(inflater, container, false)
 
         initDoctorRecycler()
+        setupSearch()
 
         // tenp
         updateDoctors(getRandomDoctors(10))
 
         return binding.root
+    }
+
+    private fun setupSearch() {
+        binding.searchDoctorBooking.doOnTextChanged { text, start, before, count ->
+            doctorAdapter.filterDoctors(text.toString())
+        }
     }
 
     override fun onDestroyView() {
