@@ -38,5 +38,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="already_reserved">This booking is already reserved</string>
     <string name="no_internet">Connexion to the server failed\n(swipe to refresh)</string>
+    <string name="appointment_info">Appointment Info</string>
 
 </resources>

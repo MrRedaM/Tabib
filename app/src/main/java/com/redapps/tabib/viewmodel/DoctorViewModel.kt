@@ -53,7 +53,7 @@ class DoctorViewModel: BaseViewModel() {
                 dataLoading.value = false
                 if (response.isSuccessful){
                     appointments.value = response.body()!!
-                    empty.value = response.body()!!.isEmpty()
+                    empty.value = appointments.value!!.isEmpty()
                     failed.value = false
                 } else {
                     toastMessage.apply {

@@ -49,9 +49,9 @@ class TreatmentFragment : Fragment() {
         initTreatmentsPager()
         setupObservers()
         binding.root.setOnRefreshListener {
-            vm.fetchTreatments(user.id)
+            vm.fetchTreatments(requireContext(), user.id)
         }
-        vm.fetchTreatments(user.id)
+        vm.fetchTreatments(requireContext(), user.id)
 
     }
 

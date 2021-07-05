@@ -99,11 +99,10 @@ class DoctorActivity : AppCompatActivity() {
             binding.swipeDoctor.isRefreshing = it
             when (it) {
                 true -> {
-                    binding.emptyLayoutDoc.visibility = View.VISIBLE
                     binding.recyclerAppointmentDoctor.visibility = View.GONE
                 }
                 false -> {
-                    binding.emptyLayoutDoc.visibility = View.GONE
+                    binding.recyclerAppointmentDoctor.visibility = View.VISIBLE
                 }
             }
         }
@@ -139,7 +138,7 @@ class DoctorActivity : AppCompatActivity() {
     }
 
     private fun fetchAppointments(){
-        vmDoctor.fetchAppointments(user.id, currentDate.dateToString(AppConstants.DATE_FORMAT))
+        vmDoctor.fetchAppointments(user.id, currentDate.dateToString("yyyy-MM-dd"))
     }
 
     private fun setupCalendar() {
@@ -193,11 +192,11 @@ class DoctorActivity : AppCompatActivity() {
         val myCalendarChangesObserver = object : CalendarChangesObserver {
 
             override fun whenSelectionChanged(isSelected: Boolean, position: Int, date: Date) {
-                currentDate = date
                 vmDoctor.fetchAppointments(user.id, date.dateToString("yyyy-MM-dd"))
                 //fetchAppointments(doctor.id, date.dateToString("yyyy-MM-dd"))
                 //bookingAdapter.setBookings(getBookingsFromInterval(date, doctor.startHour, doctor.endHour))
                 super.whenSelectionChanged(isSelected, position, date)
+                currentDate = date
             }
         }
 
