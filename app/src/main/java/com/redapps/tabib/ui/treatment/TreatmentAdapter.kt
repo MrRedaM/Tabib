@@ -9,8 +9,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.*
 import com.bumptech.glide.Glide
+import com.clovertech.autolib.utils.PrefUtils
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.gson.Gson
 import com.redapps.tabib.R
 import com.redapps.tabib.databinding.AdviceDialogLayoutBinding
 import com.redapps.tabib.model.Advice
@@ -55,28 +58,29 @@ class TreatmentAdapter : RecyclerView.Adapter<TreatmentAdapter.TreatmentViewHold
         dialog.setContentView(binding.root)
 
         binding.buttonSendAdvice.setOnClickListener {
-            // Send Advice
+            // Schedule advice sending
             val message = binding.editAdvice.text.toString()
             val user = UserUtils.getCurrentUser(context)
-            PatientApiClient.instance.sendAdvice(Advice(user.id, treatment.idDoc, message)).enqueue(object :
-                Callback<Message> {
-                override fun onResponse(call: Call<Message>, response: Response<Message>) {
-                    if (response.isSuccessful){
-                        ToastUtils.longToast(context, "Advice sent!")
-                        dialog.dismiss()
-                    } else {
-                        ToastUtils.longToast(context, "Error : " + response.message())
-                    }
-                }
-
-                override fun onFailure(call: Call<Message>, t: Throwable) {
-                    ToastUtils.longToast(context, "Failed : " + t.message)
-                    //dialog.dismiss()
-                }
-            })
+            val advice = Advice(user.id, treatment.idDoc, message)
+            val adviceJson = Gson().toJson(advice)
+            PrefUtils.with(context).save(PrefUtils.Keys.ADVICE_TO_SEND, adviceJson)
+            scheduleAdviceSend(context)
+            dialog.dismiss()
+            ToastUtils.longToast(context, "Sending advice...")
         }
 
         dialog.show()
+    }
+
+    private fun scheduleAdviceSend(context: Context){
+        val constraints = Constraints.Builder().
+        setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+        val req= OneTimeWorkRequest.Builder (AdviceWorker::class.java).
+        setConstraints(constraints).addTag("advice_tag")
+            .build()
+        val workManager = WorkManager.getInstance(context)
+        workManager.enqueueUniqueWork("advice_send_worker", ExistingWorkPolicy.REPLACE,req)
     }
 
     override fun getItemCount(): Int {

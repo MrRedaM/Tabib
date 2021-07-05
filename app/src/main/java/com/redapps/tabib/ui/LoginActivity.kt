@@ -40,6 +40,10 @@ class LoginActivity : AppCompatActivity() {
 
         // On login
         binding.buttonLogin.setOnClickListener {
+            binding.buttonLogin.visibility = View.INVISIBLE
+            binding.buttonLogin.isEnabled = false
+            binding.progressLogin.visibility = View.VISIBLE
+
             val phone = binding.editPhoneLogin.text.toString()
             val password = binding.editPasswordLogin.text.toString()
 
@@ -58,6 +62,9 @@ class LoginActivity : AppCompatActivity() {
                             startPatientActivity(user)
                         }
                     } else {
+                        binding.buttonLogin.visibility = View.VISIBLE
+                        binding.buttonLogin.isEnabled = true
+                        binding.progressLogin.visibility = View.GONE
                         ToastUtils.longToast(applicationContext, "Wrong phone or password")
                         binding.editPhoneLogin.setError("Check your phone")
                         binding.editPasswordLogin.setError("Check your password")
@@ -66,6 +73,9 @@ class LoginActivity : AppCompatActivity() {
 
                 override fun onFailure(call: Call<User>, t: Throwable) {
                     ToastUtils.longToast(applicationContext, "Failed : " + t.message)
+                    binding.buttonLogin.visibility = View.VISIBLE
+                    binding.buttonLogin.isEnabled = true
+                    binding.progressLogin.visibility = View.GONE
                 }
 
             })

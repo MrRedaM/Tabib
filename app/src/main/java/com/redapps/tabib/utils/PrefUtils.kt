@@ -15,7 +15,8 @@ class PrefUtils {
 
     // enum to store keys
     enum class Keys {
-        USER
+        USER,
+        ADVICE_TO_SEND
     }
 
     companion object {
