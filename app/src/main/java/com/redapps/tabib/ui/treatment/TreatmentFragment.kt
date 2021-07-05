@@ -56,9 +56,6 @@ class TreatmentFragment : Fragment() {
     }
 
     private fun setupObservers(){
-        //vm.treatments.observeForever {
-        //    updateTreatments(it)
-        //}
         vm.getTreatments(requireContext()).observeForever {
             updateTreatments(it)
         }

@@ -39,5 +39,8 @@
     <string name="already_reserved">This booking is already reserved</string>
     <string name="no_internet">Connexion to the server failed\n(swipe to refresh)</string>
     <string name="appointment_info">Appointment Info</string>
+    <string name="send">Send</string>
+    <string name="ask_advice">Ask Advice</string>
+    <string name="write_your_message_here">Write your message here</string>
 
 </resources>

@@ -15,4 +15,7 @@ interface PatientApiService {
     @GET("treatment/{idPatient}")
     fun getTreatmentsByPatientId(@Path("idPatient") idPatient: Int): Call<List<Treatment>>
 
+    @POST("advice")
+    fun sendAdvice(@Body advice: Advice): Call<Message>
+
 }

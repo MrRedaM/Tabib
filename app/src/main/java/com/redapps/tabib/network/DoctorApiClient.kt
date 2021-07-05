@@ -20,6 +20,7 @@ object DoctorApiClient {
             .build()
 
         val gson = GsonBuilder()
+            .setLenient()
             .enableComplexMapKeySerialization()
             .setPrettyPrinting()
             .setDateFormat(AppConstants.DATE_FORMAT)

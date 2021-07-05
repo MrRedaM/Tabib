@@ -20,6 +20,7 @@ object PatientApiClient {
             .build()
 
         val gson = GsonBuilder()
+            .setLenient()
             .enableComplexMapKeySerialization()
             .setPrettyPrinting()
             .setDateFormat("yyyy-MM-dd HH:mm")
