@@ -49,6 +49,7 @@ class DoctorDetailFragment : Fragment() {
     private val bookingAdapter = BookingAdapter(this)
     private val args: DoctorDetailFragmentArgs by navArgs()
     private lateinit var doctor: Doctor
+    private lateinit var currentDate : Date
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -144,6 +145,7 @@ class DoctorDetailFragment : Fragment() {
         val myCalendarChangesObserver = object : CalendarChangesObserver {
 
             override fun whenSelectionChanged(isSelected: Boolean, position: Int, date: Date) {
+                currentDate = date
                 fetchAppointments(doctor.id, date.dateToString("dd-MM-yyyy"))
                 //bookingAdapter.setBookings(getBookingsFromInterval(date, doctor.startHour, doctor.endHour))
                 super.whenSelectionChanged(isSelected, position, date)
@@ -164,6 +166,7 @@ class DoctorDetailFragment : Fragment() {
         }
 
         cal.select(day)
+        currentDate = calendar.time
 
         binding.buttonCalendarLeftBooking.setOnClickListener {
             cal.setDates(getDatesOfPreviousMonth())
@@ -190,7 +193,10 @@ class DoctorDetailFragment : Fragment() {
         recycler.layoutManager = LinearLayoutManager(context)
 
         fetchAppointments(doctor.id, calendar.time.dateToString("dd-MM-yyyy"))
-        //bookingAdapter.setBookings(getBookingsFromInterval(Calendar.getInstance().time, doctor.startHour, doctor.endHour))
+
+        binding.swipeBookings.setOnRefreshListener {
+            fetchAppointments(doctor.id, currentDate.dateToString("dd-MM-yyyy"))
+        }
     }
 
     private fun getBookingsFromInterval(date: Date, start: String, end: String): MutableList<Booking>{
@@ -226,7 +232,7 @@ class DoctorDetailFragment : Fragment() {
                     val reservedDated = response.body()!!.map { it.startDate }
                     val bookings = getBookingsFromInterval(date.toDate("dd-MM-yyyy")!!, doctor.startHour, doctor.endHour)
                     for (booking in bookings){
-                        if (booking.startDate in reservedDated) booking.booked = true
+                        booking.booked = booking.startDate in reservedDated
                     }
                     bookingAdapter.setBookings(bookings)
                 } else {

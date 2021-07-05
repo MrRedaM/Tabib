@@ -5,7 +5,7 @@ import java.time.LocalDate
 import java.util.*
 
 data class Booking(
-    var booked : Boolean,
+    var booked : Boolean = false,
     @SerializedName("date") var startDate : Date,
     var endDate : Date
 )
