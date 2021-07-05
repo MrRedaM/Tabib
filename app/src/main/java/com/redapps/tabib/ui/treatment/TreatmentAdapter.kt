@@ -71,7 +71,7 @@ class TreatmentAdapter : RecyclerView.Adapter<TreatmentAdapter.TreatmentViewHold
 
                 override fun onFailure(call: Call<Message>, t: Throwable) {
                     ToastUtils.longToast(context, "Failed : " + t.message)
-                    dialog.dismiss()
+                    //dialog.dismiss()
                 }
             })
         }

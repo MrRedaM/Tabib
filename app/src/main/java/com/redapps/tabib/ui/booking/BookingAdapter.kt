@@ -85,19 +85,20 @@ class BookingAdapter(val fragment: Fragment, val doctor: Doctor) : RecyclerView.
         view.findViewById<Button>(R.id.buttonReserve).setOnClickListener {
             val userJson = PrefUtils.with(fragment.requireContext()).getString(PrefUtils.Keys.USER, "")
             val user = Gson().fromJson(userJson, User::class.java)
-            reserve(fragment.requireContext(), doctor.id, user.id, date)
-            dialog.dismiss()
+            reserve(fragment.requireContext(), doctor.id, user.id, date, dialog)
+            //dialog.dismiss()
         }
 
         dialog.show()
     }
 
-    private fun reserve(context: Context, idDoc: Int, idPatient: Int, date: String){
+    private fun reserve(context: Context, idDoc: Int, idPatient: Int, date: String, dialog: BottomSheetDialog){
         DoctorApiClient.instance.reserveAppointment(Reserve(idDoc, idPatient, date)).enqueue(object :
             Callback<Appointment> {
             override fun onResponse(call: Call<Appointment>, response: Response<Appointment>) {
                 if (response.isSuccessful){
                     ToastUtils.longToast(context, "Reserved!")
+                    dialog.dismiss()
                 } else {
                     ToastUtils.longToast(context, "Error : " + response.message())
                 }
