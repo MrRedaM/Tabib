@@ -13,6 +13,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.redapps.tabib.R
 import com.redapps.tabib.model.Appointment
 import net.glxn.qrgen.android.QRCode
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class AppointmentAdapter(val fragment: AppointmentFragment) : RecyclerView.Adapter<AppointmentAdapter.AppointmentViewHolder>(){
@@ -33,6 +35,12 @@ class AppointmentAdapter(val fragment: AppointmentFragment) : RecyclerView.Adapt
         holder.itemView.setOnClickListener {
             showQrDialog(fragment, appointment.idApt)
         }
+        holder.date.text = appointment.date.dateToString("dd MMMM, yyyy")
+        holder.timeStart.text = appointment.date.dateToString("hh:mm")
+        val cal = Calendar.getInstance()
+        cal.time = appointment.date
+        cal.set(Calendar.MINUTE, cal[Calendar.MINUTE] + 30)
+        holder.timeEnd.text = cal.time.dateToString("hh:mm")
     }
 
     override fun getItemCount(): Int {
@@ -55,26 +63,19 @@ class AppointmentAdapter(val fragment: AppointmentFragment) : RecyclerView.Adapt
                 .load(QRCode.from(appointmentId.toString()).bitmap())
                 .into(qrImage)
 
-        //val multiFormatWriter = MultiFormatWriter()
-
-        //try {
-        //    val bitMatrix = multiFormatWriter.encode(
-        //        appointmentId.toString(),
-        //        BarcodeFormat.QR_CODE,
-        //        500,
-        //        500
-        //    )
-        //    val barcodeEncoder = BarcodeEncoder()
-        //    val bitmap: Bitmap = barcodeEncoder.createBitmap(bitMatrix)
-        //    val qrImage = view.findViewById<ImageView>(R.id.imageQrCode)
-        //    Glide.with(fragment)
-        //        .load(bitmap)
-        //        .into(qrImage)
-        //} catch (e: Exception) {
-        //    e.printStackTrace()
-        //}
-
         dialog.show()
+    }
+
+    private fun Date.dateToString(format: String): String {
+        //simple date formatter
+        val dateFormatter = SimpleDateFormat(format, Locale.getDefault())
+
+        //return the formatted date string
+        return dateFormatter.format(this)
+    }
+
+    private fun String.toDate(format: String): Date?{
+        return SimpleDateFormat(format).parse(this)
     }
 
     class AppointmentViewHolder(view: View) : RecyclerView.ViewHolder(view) {

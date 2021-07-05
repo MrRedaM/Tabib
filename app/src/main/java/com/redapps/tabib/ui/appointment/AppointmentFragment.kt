@@ -7,8 +7,18 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.clovertech.autolib.utils.PrefUtils
+import com.google.gson.Gson
 import com.redapps.tabib.databinding.FragmentAppointmentBinding
 import com.redapps.tabib.model.Appointment
+import com.redapps.tabib.model.Doctor
+import com.redapps.tabib.model.User
+import com.redapps.tabib.network.DoctorApiClient
+import com.redapps.tabib.network.PatientApiClient
+import com.redapps.tabib.utils.ToastUtils
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class AppointmentFragment : Fragment() {
 
@@ -31,16 +41,41 @@ class AppointmentFragment : Fragment() {
 
         _binding = FragmentAppointmentBinding.inflate(inflater, container, false)
 
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         initRecycler()
 
-        // temp
-        updateAppointments(getRandomAppointments(0))
+        val userJson = PrefUtils.with(requireContext()).getString(PrefUtils.Keys.USER, "")
+        val user = Gson().fromJson(userJson, User::class.java)
+        fetchAppointments(user.id)
+
         binding.root.setOnRefreshListener {
-            updateAppointments(getRandomAppointments(2))
-            binding.root.isRefreshing = false
+            fetchAppointments(user.id)
         }
 
-        return binding.root
+    }
+
+    private fun fetchAppointments(idPatient: Int){
+        binding.root.isRefreshing = true
+        PatientApiClient.instance.getAppointmentsByPatient(idPatient).enqueue(object : Callback<List<Appointment>> {
+            override fun onResponse(call: Call<List<Appointment>>, response: Response<List<Appointment>>) {
+                if (response.isSuccessful){
+                    updateAppointments(response.body()!!)
+                } else {
+                    ToastUtils.longToast(requireContext(), "Error  : " + response.message())
+                }
+                binding.root.isRefreshing = false
+            }
+
+            override fun onFailure(call: Call<List<Appointment>>, t: Throwable) {
+                ToastUtils.longToast(requireContext(), "Failed : " + t.message)
+                binding.root.isRefreshing = false
+            }
+        })
     }
 
     private fun updateAppointments(newAppointments: List<Appointment>){
@@ -55,15 +90,6 @@ class AppointmentFragment : Fragment() {
     private fun initRecycler() {
         binding.recyclerAppointment.adapter = adapter
         binding.recyclerAppointment.layoutManager = LinearLayoutManager(requireContext())
-    }
-
-    private fun getRandomAppointments(count: Int): List<Appointment>{
-        val list = mutableListOf<Appointment>()
-        for (i in 1..count){
-            val appointment = Appointment(1, 1, 1, "")
-            list.add(appointment)
-        }
-        return list
     }
 
     override fun onDestroyView() {
