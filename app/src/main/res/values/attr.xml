@@ -8,5 +8,7 @@
         <attr name="imageButtonBackgroundColor" format="color"/>
         <attr name="treatmentCardBackgroundColor" format="color"/>
         <attr name="textColorOnTreatmentCard" format="color"/>
+        <attr name="cardSelectedBackgroundColor" format="color"/>
+        <attr name="onCardSelectedBackgroundColor" format="color"/>
     </declare-styleable>
 </resources>

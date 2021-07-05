@@ -19,11 +19,27 @@ import java.util.*
 
 class AppointmentAdapter(val fragment: AppointmentFragment) : RecyclerView.Adapter<AppointmentAdapter.AppointmentViewHolder>(){
 
-    private val appointments = mutableListOf<Appointment>()
+    private val NORMAL_TYPE_VIEW = 0
+    private val SELECTED_TYPE_VIEW = 1
+    private val DISABLED_TYPE_VIEW = 2
+
+        private val appointments = mutableListOf<Appointment>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppointmentViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.appointment_item_layout, parent, false)
-        return AppointmentViewHolder(view)
+        return when (viewType){
+            SELECTED_TYPE_VIEW -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.appointment_item_current_layout, parent, false)
+                AppointmentViewHolder(view)
+            }
+            DISABLED_TYPE_VIEW -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.appointment_item_disabled_layout, parent, false)
+                AppointmentViewHolder(view)
+            }
+            else -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.appointment_item_layout, parent, false)
+                AppointmentViewHolder(view)
+            }
+        }
     }
 
     override fun onBindViewHolder(holder: AppointmentViewHolder, position: Int) {
@@ -47,9 +63,25 @@ class AppointmentAdapter(val fragment: AppointmentFragment) : RecyclerView.Adapt
         return appointments.size
     }
 
+    override fun getItemViewType(position: Int): Int {
+        val startDate = appointments[position].date
+        val cal = Calendar.getInstance()
+        val currentDate = cal.time
+        cal.time = startDate
+        cal.set(Calendar.MINUTE, cal[Calendar.MINUTE] + 30)
+        val endDate = cal.time
+        return if (currentDate.after(endDate))
+            DISABLED_TYPE_VIEW
+        else if (currentDate.before(startDate))
+            NORMAL_TYPE_VIEW
+        else
+            SELECTED_TYPE_VIEW
+    }
+
     fun setAppointments(newAppointments: List<Appointment>){
         appointments.clear()
         appointments.addAll(newAppointments)
+        appointments.sortByDescending { it.date }
         notifyDataSetChanged()
     }
 

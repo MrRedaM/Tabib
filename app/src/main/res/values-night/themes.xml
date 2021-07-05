@@ -27,6 +27,8 @@
         <item name="treatmentCardBackgroundColor">?attr/colorPrimary</item>
         <item name="textColorOnTreatmentCard">?attr/colorOnPrimary</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+        <item name="cardSelectedBackgroundColor">?attr/colorPrimary</item>
+        <item name="onCardSelectedBackgroundColor">?attr/colorOnPrimary</item>
     </style>
 
     <style name="AppBottomSheetDialogTheme"
