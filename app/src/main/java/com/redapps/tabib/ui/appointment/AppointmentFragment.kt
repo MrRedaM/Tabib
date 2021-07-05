@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,13 +24,9 @@ import retrofit2.Response
 
 class AppointmentFragment : Fragment() {
 
+    val adapter = AppointmentAdapter(requireActivity() as AppCompatActivity)
+
     private lateinit var vmPatient: PatientViewModel
-    private var _binding: FragmentAppointmentBinding? = null
-
-    val adapter = AppointmentAdapter(this)
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private lateinit var binding : FragmentAppointmentBinding
 
     override fun onCreateView(

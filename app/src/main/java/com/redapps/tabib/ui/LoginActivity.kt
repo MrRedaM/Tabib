@@ -70,6 +70,11 @@ class LoginActivity : AppCompatActivity() {
 
             })
         }
+
+        // temp
+        binding.textForgotPass.setOnClickListener {
+            startDoctorActivity(User(1, "User", "Test", "", "", "", "", "", ""))
+        }
     }
 
     private fun startPatientActivity(user: User){

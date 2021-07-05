@@ -1,11 +1,13 @@
 package com.redapps.tabib.ui.appointment
 
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -17,11 +19,12 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class AppointmentAdapter(val fragment: AppointmentFragment) : RecyclerView.Adapter<AppointmentAdapter.AppointmentViewHolder>(){
+class AppointmentAdapter(val activity: AppCompatActivity) : RecyclerView.Adapter<AppointmentAdapter.AppointmentViewHolder>(){
 
     private val NORMAL_TYPE_VIEW = 0
     private val SELECTED_TYPE_VIEW = 1
     private val DISABLED_TYPE_VIEW = 2
+
 
         private val appointments = mutableListOf<Appointment>()
 
@@ -49,7 +52,7 @@ class AppointmentAdapter(val fragment: AppointmentFragment) : RecyclerView.Adapt
             .load(if (position % 2 == 0) R.drawable.doctor1 else R.drawable.doctor2)
             .into(holder.image)
         holder.itemView.setOnClickListener {
-            showQrDialog(fragment, appointment.idApt)
+            showQrDialog(activity, appointment.idApt)
         }
         holder.date.text = appointment.date.dateToString("dd MMMM, yyyy")
         holder.timeStart.text = appointment.date.dateToString("hh:mm")
@@ -85,13 +88,13 @@ class AppointmentAdapter(val fragment: AppointmentFragment) : RecyclerView.Adapt
         notifyDataSetChanged()
     }
 
-    private fun showQrDialog(fragment: Fragment, appointmentId: Int){
-        val dialog = BottomSheetDialog(fragment.requireContext())
-        val view = fragment.layoutInflater.inflate(R.layout.qr_dialog_layout, null)
+    private fun showQrDialog(activity: AppCompatActivity, appointmentId: Int){
+        val dialog = BottomSheetDialog(activity)
+        val view = activity.layoutInflater.inflate(R.layout.qr_dialog_layout, null)
         dialog.setContentView(view)
 
         val qrImage = view.findViewById<ImageView>(R.id.imageQrCode)
-            Glide.with(fragment)
+            Glide.with(activity)
                 .load(QRCode.from(appointmentId.toString()).bitmap())
                 .into(qrImage)
 

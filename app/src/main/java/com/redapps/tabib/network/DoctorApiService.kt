@@ -14,6 +14,9 @@ interface DoctorApiService {
     @POST("appointment")
     fun getAppointmentsByDocAndDate(@Body bookingFetch: BookingFetch): Call<List<Booking>>
 
+    @POST("appointment")
+    fun getAppointments(@Body bookingFetch: BookingFetch): Call<List<Appointment>>
+
     @POST("appointment/add")
     fun reserveAppointment(@Body reserve: Reserve): Call<Appointment>
 
