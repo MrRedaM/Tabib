@@ -1,6 +1,7 @@
 package com.redapps.tabib.ui.appointment
 
 
+import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -12,14 +13,17 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.gson.Gson
 import com.redapps.tabib.R
 import com.redapps.tabib.model.Appointment
+import com.redapps.tabib.model.AppointmentDetail
+import com.redapps.tabib.utils.UserUtils
 import net.glxn.qrgen.android.QRCode
 import java.text.SimpleDateFormat
 import java.util.*
 
 
-class AppointmentAdapter(val activity: AppCompatActivity) : RecyclerView.Adapter<AppointmentAdapter.AppointmentViewHolder>(){
+class AppointmentAdapter(val activity: Activity) : RecyclerView.Adapter<AppointmentAdapter.AppointmentViewHolder>(){
 
     private val NORMAL_TYPE_VIEW = 0
     private val SELECTED_TYPE_VIEW = 1
@@ -52,7 +56,7 @@ class AppointmentAdapter(val activity: AppCompatActivity) : RecyclerView.Adapter
             .load(if (position % 2 == 0) R.drawable.doctor1 else R.drawable.doctor2)
             .into(holder.image)
         holder.itemView.setOnClickListener {
-            showQrDialog(activity, appointment.idApt)
+            showQrDialog(activity, appointment)
         }
         holder.date.text = appointment.date.dateToString("dd MMMM, yyyy")
         holder.timeStart.text = appointment.date.dateToString("hh:mm")
@@ -88,14 +92,22 @@ class AppointmentAdapter(val activity: AppCompatActivity) : RecyclerView.Adapter
         notifyDataSetChanged()
     }
 
-    private fun showQrDialog(activity: AppCompatActivity, appointmentId: Int){
+    private fun showQrDialog(activity: Activity, appointment: Appointment){
         val dialog = BottomSheetDialog(activity)
         val view = activity.layoutInflater.inflate(R.layout.qr_dialog_layout, null)
         dialog.setContentView(view)
 
+        val user = UserUtils.getCurrentUser(activity)
+        val appointment = AppointmentDetail(
+            user.name + " " + user.surname,
+            user.phone,
+            appointment.date
+        )
+        val appointJson = Gson().toJson(appointment)
+
         val qrImage = view.findViewById<ImageView>(R.id.imageQrCode)
             Glide.with(activity)
-                .load(QRCode.from(appointmentId.toString()).bitmap())
+                .load(QRCode.from(appointJson).bitmap())
                 .into(qrImage)
 
         dialog.show()

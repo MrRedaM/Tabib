@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.gson.Gson
 import com.michalsvec.singlerowcalendar.calendar.CalendarChangesObserver
 import com.michalsvec.singlerowcalendar.calendar.CalendarViewManager
 import com.michalsvec.singlerowcalendar.calendar.SingleRowCalendar
@@ -19,7 +21,9 @@ import com.michalsvec.singlerowcalendar.selection.CalendarSelectionManager
 import com.michalsvec.singlerowcalendar.utils.DateUtils
 import com.redapps.tabib.R
 import com.redapps.tabib.databinding.ActivityDoctorBinding
+import com.redapps.tabib.databinding.AppointmentDetailLayoutBinding
 import com.redapps.tabib.model.Appointment
+import com.redapps.tabib.model.AppointmentDetail
 import com.redapps.tabib.model.Doctor
 import com.redapps.tabib.model.User
 import com.redapps.tabib.ui.appointment.AppointmentAdapter
@@ -61,7 +65,10 @@ class DoctorActivity : AppCompatActivity() {
         // QR scan button click
         var scanLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                ToastUtils.longToast(this, "Appointment ID : " + result.data!!.getStringExtra("SCAN_RESULT"))
+                //ToastUtils.longToast(this, "Appointment ID : " + result.data!!.getStringExtra("SCAN_RESULT"))
+                val resultStr = result.data!!.getStringExtra("SCAN_RESULT")
+                val appointment = Gson().fromJson(resultStr, AppointmentDetail::class.java)
+                showAppointmentDetailDialog(appointment)
             }
         }
         binding.buttonScanQr.setOnClickListener {
@@ -89,6 +96,20 @@ class DoctorActivity : AppCompatActivity() {
             .load(R.drawable.doctor1)
             .into(binding.imageAccountMain)
 
+    }
+
+    private fun showAppointmentDetailDialog(appointment: AppointmentDetail) {
+        val dialog = BottomSheetDialog(this)
+        //val view = this.layoutInflater.inflate(R.layout.appointment_detail_layout, null)
+        val bind = AppointmentDetailLayoutBinding.inflate(layoutInflater)
+        dialog.setContentView(bind.root)
+
+        bind.textAppointmentPatientName.text = appointment.name
+        bind.textAppointmentPhone.text = appointment.phone
+        bind.textAppointmentDate.text = appointment.date.dateToString("dd MMMM, yyyy")
+        bind.textAppointmentTime.text = appointment.date.dateToString("hh:mm")
+
+        dialog.show()
     }
 
     private fun setupObservers(){

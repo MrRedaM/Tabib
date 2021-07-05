@@ -24,7 +24,7 @@ import retrofit2.Response
 
 class AppointmentFragment : Fragment() {
 
-    val adapter = AppointmentAdapter(requireActivity() as AppCompatActivity)
+    private lateinit var adapter : AppointmentAdapter
 
     private lateinit var vmPatient: PatientViewModel
     private lateinit var binding : FragmentAppointmentBinding
@@ -119,6 +119,7 @@ class AppointmentFragment : Fragment() {
     }
 
     private fun initRecycler() {
+        adapter = AppointmentAdapter(requireActivity())
         binding.recyclerAppointment.adapter = adapter
         binding.recyclerAppointment.layoutManager = LinearLayoutManager(requireContext())
     }
