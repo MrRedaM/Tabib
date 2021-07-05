@@ -16,13 +16,14 @@ import com.redapps.tabib.model.User
 import com.redapps.tabib.network.DoctorApiClient
 import com.redapps.tabib.network.PatientApiClient
 import com.redapps.tabib.utils.ToastUtils
+import com.redapps.tabib.viewmodel.PatientViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class AppointmentFragment : Fragment() {
 
-    private lateinit var appointmentViewModel: AppointmentViewModel
+    private lateinit var vmPatient: PatientViewModel
     private var _binding: FragmentAppointmentBinding? = null
 
     val adapter = AppointmentAdapter(this)
@@ -36,8 +37,8 @@ class AppointmentFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        appointmentViewModel =
-            ViewModelProvider(this).get(AppointmentViewModel::class.java)
+        vmPatient =
+            ViewModelProvider(this).get(PatientViewModel::class.java)
 
         _binding = FragmentAppointmentBinding.inflate(inflater, container, false)
 
@@ -47,14 +48,39 @@ class AppointmentFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initRecycler()
-
         val userJson = PrefUtils.with(requireContext()).getString(PrefUtils.Keys.USER, "")
         val user = Gson().fromJson(userJson, User::class.java)
         fetchAppointments(user.id)
 
         binding.root.setOnRefreshListener {
-            fetchAppointments(user.id)
+            //fetchAppointments(user.id)
+            vmPatient.fetchAppointments(user.id)
+        }
+
+        // Setups
+        initRecycler()
+        setupObservers()
+
+    }
+
+    private fun setupObservers(){
+        vmPatient.appointments.observeForever {
+            updateAppointments(it)
+        }
+        vmPatient.dataLoading.observeForever {
+            binding.root.isRefreshing = it
+        }
+        vmPatient.empty.observeForever {
+            when (it) {
+                true -> binding.emptyLayout.visibility = View.VISIBLE
+                false -> binding.emptyLayout.visibility = View.GONE
+            }
+        }
+        vmPatient.failed.observeForever {
+            when (it) {
+                true -> binding.layoutFailed.visibility = View.VISIBLE
+                false -> binding.layoutFailed.visibility = View.GONE
+            }
         }
 
     }

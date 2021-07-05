@@ -21,19 +21,22 @@ class DoctorViewModel: BaseViewModel() {
                     doctors.apply {
                         value = response.body()!!
                     }
-                    empty.value = false
+                    empty.value = response.body()!!.isEmpty()
+                    failed.value = false
                 } else {
                     toastMessage.apply {
                         value = "Error  : " + response.message()
                     }
-                    empty.value = true
+                    empty.value = false
+                    failed.value = true
                 }
             }
 
             override fun onFailure(call: Call<List<Doctor>>, t: Throwable) {
                 dataLoading.value = false
                 toastMessage.value = "Failed : " + t.message
-                empty.value = true
+                empty.value = false
+                failed.value = true
             }
         })
 
