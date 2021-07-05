@@ -22,14 +22,10 @@ import kotlin.math.abs
 
 class TreatmentFragment : Fragment() {
 
-    private lateinit var vm: PatientViewModel
-    private var _binding: FragmentTreatmentBinding? = null
-
     private val treatmentAdapter = TreatmentAdapter()
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private lateinit var vm: PatientViewModel
+    private lateinit var binding : FragmentTreatmentBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,7 +35,7 @@ class TreatmentFragment : Fragment() {
         vm =
             ViewModelProvider(this).get(PatientViewModel::class.java)
 
-        _binding = FragmentTreatmentBinding.inflate(inflater, container, false)
+        binding = FragmentTreatmentBinding.inflate(inflater, container, false)
 
         return binding.root
     }
@@ -65,6 +61,18 @@ class TreatmentFragment : Fragment() {
         }
         vm.dataLoading.observeForever {
             binding.root.isRefreshing = it
+            when (it) {
+                true -> {
+                    binding.textTreatmentNumber.visibility = View.GONE
+                    binding.textTitle1Treatment.visibility = View.GONE
+                    binding.textTitle2Treatment.visibility = View.GONE
+                }
+                false -> {
+                    binding.textTreatmentNumber.visibility = View.VISIBLE
+                    binding.textTitle1Treatment.visibility = View.VISIBLE
+                    binding.textTitle2Treatment.visibility = View.VISIBLE
+                }
+            }
         }
         vm.empty.observeForever {
             when (it) {
@@ -73,13 +81,16 @@ class TreatmentFragment : Fragment() {
             }
         }
         vm.failed.observeForever {
-            /*when (it) {
-                true -> binding.layoutFailed.visibility = View.VISIBLE
-                false -> binding.layoutFailed.visibility = View.GONE
-            }*/
+            when (it) {
+                true -> binding.failedLayout.visibility = View.VISIBLE
+                false -> binding.failedLayout.visibility = View.GONE
+            }
         }
         vm.toastMessage.observeForever {
-            ToastUtils.longToast(requireContext(), it)
+            try {
+                ToastUtils.longToast(requireContext(), it)
+            } catch (e: Exception) {
+            }
         }
     }
 
@@ -117,10 +128,5 @@ class TreatmentFragment : Fragment() {
             if (i % 2 == 0) list.add(medic) else list.add(medic1)
         }
         return list
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

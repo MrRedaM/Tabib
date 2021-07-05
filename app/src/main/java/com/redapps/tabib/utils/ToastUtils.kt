@@ -10,11 +10,14 @@ object ToastUtils {
     private var toast: Toast? = null
 
     fun longToast(context: Context, message: String?){
-        if (toast != null){
-            toast!!.cancel()
+        try {
+            if (toast != null){
+                toast!!.cancel()
+            }
+            toast = Toast.makeText(context, message, Toast.LENGTH_LONG)
+            toast!!.show()
+        } catch (e: Exception) {
         }
-        toast = Toast.makeText(context, message, Toast.LENGTH_LONG)
-        toast!!.show()
     }
 
 }

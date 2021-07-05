@@ -34,6 +34,18 @@
         app:shapeAppearanceOverlay="@style/circleImageStyle"
         tools:srcCompat="@drawable/doctor1" />
 
+    <com.michalsvec.singlerowcalendar.calendar.SingleRowCalendar
+        android:id="@+id/calendarDoctorActivity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:deselection="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageAccountMain"
+        app:longPress="false"
+        app:multiSelection="false" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/buttonScanQr"
         android:layout_width="wrap_content"
@@ -41,17 +53,9 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:clickable="true"
+        android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_round_qr_code_scanner_24" />
-
-    <CalendarView
-        android:id="@+id/calendarView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageAccountMain" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

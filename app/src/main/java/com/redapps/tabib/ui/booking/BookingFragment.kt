@@ -22,14 +22,10 @@ import retrofit2.Response
 
 class BookingFragment : Fragment() {
 
-    private lateinit var vm: DoctorViewModel
-    private var _binding: FragmentBookingBinding? = null
-
     private val doctorAdapter = DoctorAdapter()
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private lateinit var vm: DoctorViewModel
+    private lateinit var binding : FragmentBookingBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,7 +35,7 @@ class BookingFragment : Fragment() {
         vm =
             ViewModelProvider(this).get(DoctorViewModel::class.java)
 
-        _binding = FragmentBookingBinding.inflate(inflater, container, false)
+        binding = FragmentBookingBinding.inflate(inflater, container, false)
 
         return binding.root
     }
@@ -59,7 +55,6 @@ class BookingFragment : Fragment() {
         }
 
         // Initial fetch
-        //fetchDoctors()
         vm.fetchDoctors()
     }
 
@@ -69,6 +64,10 @@ class BookingFragment : Fragment() {
         }
         vm.dataLoading.observeForever {
             binding.root.isRefreshing = it
+            when (it) {
+                true -> binding.searchDoctorBooking.visibility = View.GONE
+                false -> binding.searchDoctorBooking.visibility = View.VISIBLE
+            }
         }
         vm.empty.observeForever {
             when (it) {
@@ -82,36 +81,18 @@ class BookingFragment : Fragment() {
                 false -> binding.failedLayout.visibility = View.GONE
             }
         }
-    }
-
-    private fun fetchDoctors(){
-        DoctorApiClient.instance.getDoctors().enqueue(object : Callback<List<Doctor>>{
-            override fun onResponse(call: Call<List<Doctor>>, response: Response<List<Doctor>>) {
-                if (response.isSuccessful){
-                    //ToastUtils.longToast(requireContext(), "Get Docs success!")
-                    updateDoctors(response.body()!!)
-                } else {
-                    ToastUtils.longToast(requireContext(), "Error  : " + response.message())
-                }
-                binding.root.isRefreshing = false
+        vm.toastMessage.observeForever {
+            try {
+                ToastUtils.longToast(requireContext(), it)
+            } catch (e: Exception) {
             }
-
-            override fun onFailure(call: Call<List<Doctor>>, t: Throwable) {
-                ToastUtils.longToast(requireContext(), "Failed : " + t.message)
-                binding.root.isRefreshing = false
-            }
-        })
+        }
     }
 
     private fun setupSearch() {
         binding.searchDoctorBooking.doOnTextChanged { text, start, before, count ->
             doctorAdapter.filterDoctors(text.toString())
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun updateDoctors(newDoctors: List<Doctor>){

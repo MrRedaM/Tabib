@@ -30,7 +30,7 @@ class AppointmentFragment : Fragment() {
 
     // This property is only valid between onCreateView and
     // onDestroyView.
-    private val binding get() = _binding!!
+    private lateinit var binding : FragmentAppointmentBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,7 +40,7 @@ class AppointmentFragment : Fragment() {
         vmPatient =
             ViewModelProvider(this).get(PatientViewModel::class.java)
 
-        _binding = FragmentAppointmentBinding.inflate(inflater, container, false)
+        binding = FragmentAppointmentBinding.inflate(inflater, container, false)
 
         return binding.root
     }
@@ -50,16 +50,15 @@ class AppointmentFragment : Fragment() {
 
         val userJson = PrefUtils.with(requireContext()).getString(PrefUtils.Keys.USER, "")
         val user = Gson().fromJson(userJson, User::class.java)
-        fetchAppointments(user.id)
 
         binding.root.setOnRefreshListener {
-            //fetchAppointments(user.id)
             vmPatient.fetchAppointments(user.id)
         }
 
         // Setups
         initRecycler()
         setupObservers()
+        vmPatient.fetchAppointments(user.id)
 
     }
 
@@ -69,6 +68,10 @@ class AppointmentFragment : Fragment() {
         }
         vmPatient.dataLoading.observeForever {
             binding.root.isRefreshing = it
+            when (it) {
+                true -> binding.textTitleAppointments.visibility = View.GONE
+                false -> binding.textTitleAppointments.visibility = View.VISIBLE
+            }
         }
         vmPatient.empty.observeForever {
             when (it) {
@@ -82,7 +85,12 @@ class AppointmentFragment : Fragment() {
                 false -> binding.layoutFailed.visibility = View.GONE
             }
         }
-
+        vmPatient.toastMessage.observeForever {
+            try {
+                ToastUtils.longToast(requireContext(), it)
+            } catch (e: Exception) {
+            }
+        }
     }
 
     private fun fetchAppointments(idPatient: Int){
@@ -116,10 +124,5 @@ class AppointmentFragment : Fragment() {
     private fun initRecycler() {
         binding.recyclerAppointment.adapter = adapter
         binding.recyclerAppointment.layoutManager = LinearLayoutManager(requireContext())
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }
