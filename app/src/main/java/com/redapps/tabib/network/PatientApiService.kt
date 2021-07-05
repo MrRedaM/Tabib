@@ -12,4 +12,7 @@ interface PatientApiService {
     @GET("appointment/{idPatient}")
     fun getAppointmentsByPatient(@Path("idPatient") idPatient: Int): Call<List<Appointment>>
 
+    @GET("treatment/{idPatient}")
+    fun getTreatmentsByPatientId(@Path("idPatient") idPatient: Int): Call<List<Treatment>>
+
 }

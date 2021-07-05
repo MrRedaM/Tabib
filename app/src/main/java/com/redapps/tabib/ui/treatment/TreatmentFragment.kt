@@ -9,15 +9,20 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
+import com.clovertech.autolib.utils.PrefUtils
+import com.google.gson.Gson
 import com.redapps.tabib.databinding.FragmentTreatmentBinding
 import com.redapps.tabib.model.Medicament
 import com.redapps.tabib.model.Treatment
+import com.redapps.tabib.model.User
+import com.redapps.tabib.utils.ToastUtils
+import com.redapps.tabib.viewmodel.PatientViewModel
 import java.util.*
 import kotlin.math.abs
 
 class TreatmentFragment : Fragment() {
 
-    private lateinit var treatmentViewModel: TreatmentViewModel
+    private lateinit var vm: PatientViewModel
     private var _binding: FragmentTreatmentBinding? = null
 
     private val treatmentAdapter = TreatmentAdapter()
@@ -31,21 +36,51 @@ class TreatmentFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        treatmentViewModel =
-            ViewModelProvider(this).get(TreatmentViewModel::class.java)
+        vm =
+            ViewModelProvider(this).get(PatientViewModel::class.java)
 
         _binding = FragmentTreatmentBinding.inflate(inflater, container, false)
 
-        initTreatmentsPager()
-
-        // temp
-        updateTreatments(getRandomTreatments(0))
-        binding.root.setOnRefreshListener {
-            updateTreatments(getRandomTreatments(4))
-            binding.root.isRefreshing = false
-        }
-
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val userJson = PrefUtils.with(requireContext()).getString(PrefUtils.Keys.USER, "")
+        val user = Gson().fromJson(userJson, User::class.java)
+
+        initTreatmentsPager()
+        setupObservers()
+        binding.root.setOnRefreshListener {
+            vm.fetchTreatments(user.id)
+        }
+        vm.fetchTreatments(user.id)
+
+    }
+
+    private fun setupObservers(){
+        vm.treatments.observeForever {
+            updateTreatments(it)
+        }
+        vm.dataLoading.observeForever {
+            binding.root.isRefreshing = it
+        }
+        vm.empty.observeForever {
+            when (it) {
+                true -> binding.emptyLayout.visibility = View.VISIBLE
+                false -> binding.emptyLayout.visibility = View.GONE
+            }
+        }
+        vm.failed.observeForever {
+            /*when (it) {
+                true -> binding.layoutFailed.visibility = View.VISIBLE
+                false -> binding.layoutFailed.visibility = View.GONE
+            }*/
+        }
+        vm.toastMessage.observeForever {
+            ToastUtils.longToast(requireContext(), it)
+        }
     }
 
     private fun initTreatmentsPager() {
@@ -70,23 +105,8 @@ class TreatmentFragment : Fragment() {
     }
 
     private fun updateTreatments(newTreatments: List<Treatment>){
-        if (newTreatments.isNotEmpty()){
-            binding.emptyLayout.visibility = View.GONE
-        } else {
-            binding.emptyLayout.visibility = View.VISIBLE
-        }
         treatmentAdapter.setTreatments(newTreatments)
         binding.textTreatmentNumber.text = newTreatments.size.toString()
-    }
-
-    private fun getRandomTreatments(count: Int): List<Treatment>{
-        val list = mutableListOf<Treatment>()
-        for (i in 1..count){
-            val treatment = Treatment(i, 1, 1, Calendar.getInstance().time,
-                Calendar.getInstance().time, getRandomMedics(5))
-            list.add(treatment)
-        }
-        return list
     }
 
     private fun getRandomMedics(count: Int): List<Medicament> {
