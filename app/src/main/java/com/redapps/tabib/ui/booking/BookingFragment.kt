@@ -72,8 +72,14 @@ class BookingFragment : Fragment() {
         }
         vm.empty.observeForever {
             when (it) {
-                true -> binding.emptyDoctors.visibility = View.VISIBLE
-                false -> binding.emptyDoctors.visibility = View.GONE
+                true -> binding.emptyLayout.visibility = View.VISIBLE
+                false -> binding.emptyLayout.visibility = View.GONE
+            }
+        }
+        vm.failed.observeForever {
+            when (it) {
+                true -> binding.failedLayout.visibility = View.VISIBLE
+                false -> binding.failedLayout.visibility = View.GONE
             }
         }
     }
@@ -109,11 +115,6 @@ class BookingFragment : Fragment() {
     }
 
     private fun updateDoctors(newDoctors: List<Doctor>){
-        if (newDoctors.isNotEmpty()){
-            binding.emptyDoctors.visibility = View.GONE
-        } else {
-            binding.emptyDoctors.visibility = View.VISIBLE
-        }
         doctorAdapter.setDoctors(newDoctors)
     }
 
