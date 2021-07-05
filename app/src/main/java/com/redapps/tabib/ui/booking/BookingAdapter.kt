@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.redapps.tabib.R
 import com.redapps.tabib.model.Booking
+import com.redapps.tabib.utils.ToastUtils
 import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -24,11 +25,19 @@ class BookingAdapter(val fragment: Fragment) : RecyclerView.Adapter<BookingAdapt
 
     override fun onBindViewHolder(holder: BookingViewHolder, position: Int) {
         val booking = bookings[position]
+        val context = holder.itemView.context
         holder.date.text = booking.startDate.dateToString("dd MMMM")
         holder.timeStart.text = booking.startDate.dateToString("hh:mm")
         holder.timeEnd.text = booking.endDate.dateToString("hh:mm")
-        holder.itemView.setOnClickListener {
-            showReserveDialog(fragment)
+        if (!booking.booked){
+            holder.itemView.setOnClickListener {
+                showReserveDialog(fragment)
+            }
+        } else {
+            holder.itemView.alpha = 0.3F
+            holder.itemView.setOnClickListener {
+                ToastUtils.longToast(context, context.getString(R.string.already_reserved))
+            }
         }
     }
 
@@ -39,6 +48,11 @@ class BookingAdapter(val fragment: Fragment) : RecyclerView.Adapter<BookingAdapt
     fun setBookings(list: List<Booking>) {
         bookings.clear()
         bookings.addAll(list)
+        notifyDataSetChanged()
+    }
+
+    fun clear(){
+        bookings.clear()
         notifyDataSetChanged()
     }
 

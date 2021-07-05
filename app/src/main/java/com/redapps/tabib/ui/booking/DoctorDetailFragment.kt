@@ -25,9 +25,14 @@ import com.redapps.tabib.R
 import com.redapps.tabib.databinding.FragmentBookingBinding
 import com.redapps.tabib.databinding.FragmentDoctorDetailBinding
 import com.redapps.tabib.model.Booking
+import com.redapps.tabib.model.BookingFetch
 import com.redapps.tabib.model.Doctor
+import com.redapps.tabib.network.DoctorApiClient
 import com.redapps.tabib.utils.AppConstants
 import com.redapps.tabib.utils.ToastUtils
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -139,13 +144,14 @@ class DoctorDetailFragment : Fragment() {
         val myCalendarChangesObserver = object : CalendarChangesObserver {
 
             override fun whenSelectionChanged(isSelected: Boolean, position: Int, date: Date) {
-                bookingAdapter.setBookings(getBookingsFromInterval(date, doctor.startHour, doctor.endHour))
+                fetchAppointments(doctor.id, date.dateToString("dd-MM-yyyy"))
+                //bookingAdapter.setBookings(getBookingsFromInterval(date, doctor.startHour, doctor.endHour))
                 super.whenSelectionChanged(isSelected, position, date)
             }
         }
 
         val calendarView: SingleRowCalendar = binding.calendarBooking
-        val day = calendar[Calendar.DAY_OF_MONTH]
+        val day = calendar[Calendar.DAY_OF_MONTH] - 1
 
         val cal = calendarView.apply {
             calendarViewManager = myCalendarViewManager
@@ -183,7 +189,8 @@ class DoctorDetailFragment : Fragment() {
         recycler.adapter = bookingAdapter
         recycler.layoutManager = LinearLayoutManager(context)
 
-        bookingAdapter.setBookings(getBookingsFromInterval(Calendar.getInstance().time, doctor.startHour, doctor.endHour))
+        fetchAppointments(doctor.id, calendar.time.dateToString("dd-MM-yyyy"))
+        //bookingAdapter.setBookings(getBookingsFromInterval(Calendar.getInstance().time, doctor.startHour, doctor.endHour))
     }
 
     private fun getBookingsFromInterval(date: Date, start: String, end: String): MutableList<Booking>{
@@ -198,22 +205,42 @@ class DoctorDetailFragment : Fragment() {
         cal.set(date.dateToString("yyyy-MM-dd").split("-")[0].toInt(),
             date.dateToString("yyyy-MM-dd").split("-")[1].toInt() - 1,
             date.dateToString("yyyy-MM-dd").split("-")[2].toInt())
-        //endCal.time = date
-        //endCal.set(Calendar.HOUR, start.split(":")[0].toInt())
-        //endCal.set(Calendar.MINUTE, start.split(":")[1].toInt())
-        //cal.time = date
-        //cal.set(Calendar.HOUR, start.split(":")[0].toInt())
-        //cal.set(Calendar.MINUTE, start.split(":")[1].toInt())
         var stop = false
         while (!stop){
             val startCal = Calendar.getInstance()
             startCal.time = cal.time
             cal.set(Calendar.MINUTE, cal[Calendar.MINUTE] + 30)
-            if (cal.before(endCal)) {
+            if (!cal.after(endCal)) {
                 result.add(Booking(false, startCal.time, cal.time))
             } else stop = true
         }
         return result
+    }
+
+    private fun fetchAppointments(idDoc: Int, date: String){
+        bookingAdapter.clear()
+        binding.swipeBookings.isRefreshing = true
+        DoctorApiClient.instance.getAppointmentsByDocAndDate(BookingFetch(idDoc, date)).enqueue(object : Callback<List<Booking>>{
+            override fun onResponse(call: Call<List<Booking>>, response: Response<List<Booking>>) {
+                if (response.isSuccessful){
+                    val reservedDated = response.body()!!.map { it.startDate }
+                    val bookings = getBookingsFromInterval(date.toDate("dd-MM-yyyy")!!, doctor.startHour, doctor.endHour)
+                    for (booking in bookings){
+                        if (booking.startDate in reservedDated) booking.booked = true
+                    }
+                    bookingAdapter.setBookings(bookings)
+                } else {
+                    ToastUtils.longToast(requireContext(), "Error : " + response.message())
+                }
+                binding.swipeBookings.isRefreshing = false
+            }
+
+            override fun onFailure(call: Call<List<Booking>>, t: Throwable) {
+                ToastUtils.longToast(requireContext(), "Failed : " + t.message)
+                binding.swipeBookings.isRefreshing = false
+            }
+
+        })
     }
 
     private fun Date.dateToString(format: String): String {

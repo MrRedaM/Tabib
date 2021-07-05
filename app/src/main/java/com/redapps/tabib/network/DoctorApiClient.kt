@@ -22,7 +22,7 @@ object DoctorApiClient {
         val gson = GsonBuilder()
             .enableComplexMapKeySerialization()
             .setPrettyPrinting()
-            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+            .setDateFormat("dd-MM-yyyy HH:mm")
             .create()
 
         baseUrl(AppConstants.BASE_URL)

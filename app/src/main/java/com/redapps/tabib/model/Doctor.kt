@@ -3,6 +3,7 @@ package com.redapps.tabib.model
 import com.google.gson.annotations.SerializedName
 
 data class Doctor(
+    @SerializedName("id") var id: Int,
     @SerializedName("surname") var firstName: String,
     @SerializedName("name") var lastName: String,
     @SerializedName("docPicUrl") var photo: String,

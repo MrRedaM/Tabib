@@ -106,9 +106,9 @@ class BookingFragment : Fragment() {
 
     private fun getRandomDoctors(count: Int): List<Doctor>{
         val list = mutableListOf<Doctor>()
-        val doctor = Doctor("Ahmed", "Doctor", "", "05 35 54 23 88",
+        val doctor = Doctor(1, "Ahmed", "Doctor", "", "05 35 54 23 88",
         "Psychology", 0.0, 0.0, "9", "16")
-        val doctor1 = Doctor("Hadjer", "Doctor", "", "05 55 64 44 35",
+        val doctor1 = Doctor(1, "Hadjer", "Doctor", "", "05 55 64 44 35",
             "Cardiology", 0.0, 0.0, "9", "16")
         for (i in 1..count){
             if (i % 2 == 1) list.add(doctor) else list.add(doctor1)

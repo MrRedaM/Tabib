@@ -143,8 +143,8 @@
 
     </com.michalsvec.singlerowcalendar.calendar.SingleRowCalendar>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerTimeBooking"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeBookings"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
@@ -153,8 +153,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/calendarBooking"
-        tools:listitem="@layout/booking_item_layout"/>
+        app:layout_constraintTop_toBottomOf="@+id/calendarBooking">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerTimeBooking"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/booking_item_layout" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
     <ImageButton
         android:id="@+id/buttonCalendarRightBooking"
