@@ -15,13 +15,14 @@ import com.redapps.tabib.databinding.FragmentBookingBinding
 import com.redapps.tabib.model.Doctor
 import com.redapps.tabib.network.DoctorApiClient
 import com.redapps.tabib.utils.ToastUtils
+import com.redapps.tabib.viewmodel.DoctorViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class BookingFragment : Fragment() {
 
-    private lateinit var bookingViewModel: BookingViewModel
+    private lateinit var vm: DoctorViewModel
     private var _binding: FragmentBookingBinding? = null
 
     private val doctorAdapter = DoctorAdapter()
@@ -35,8 +36,8 @@ class BookingFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        bookingViewModel =
-            ViewModelProvider(this).get(BookingViewModel::class.java)
+        vm =
+            ViewModelProvider(this).get(DoctorViewModel::class.java)
 
         _binding = FragmentBookingBinding.inflate(inflater, container, false)
 
@@ -49,14 +50,32 @@ class BookingFragment : Fragment() {
         // Setups
         initDoctorRecycler()
         setupSearch()
+        setupObservers()
 
         // On refresh
         binding.root.setOnRefreshListener {
-            fetchDoctors()
+            //fetchDoctors()
+            vm.fetchDoctors()
         }
 
         // Initial fetch
-        fetchDoctors()
+        //fetchDoctors()
+        vm.fetchDoctors()
+    }
+
+    private fun setupObservers(){
+        vm.doctors.observeForever {
+            updateDoctors(it)
+        }
+        vm.dataLoading.observeForever {
+            binding.root.isRefreshing = it
+        }
+        vm.empty.observeForever {
+            when (it) {
+                true -> binding.emptyDoctors.visibility = View.VISIBLE
+                false -> binding.emptyDoctors.visibility = View.GONE
+            }
+        }
     }
 
     private fun fetchDoctors(){

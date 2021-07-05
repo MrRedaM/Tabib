@@ -6,8 +6,8 @@
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lottieAnimationView"
-        android:layout_width="400dp"
-        android:layout_height="400dp"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
         app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -17,7 +17,7 @@
         app:layout_constraintVertical_chainStyle="packed"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
-        app:lottie_rawRes="@raw/empty1" />
+        app:lottie_rawRes="@raw/wifi" />
 
     <TextView
         android:id="@+id/textView"
@@ -25,9 +25,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        android:text="@string/no_doctors"
+        android:text="@string/no_internet"
         android:textAlignment="center"
-        android:textSize="24sp"
+        android:textSize="18sp"
         app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
