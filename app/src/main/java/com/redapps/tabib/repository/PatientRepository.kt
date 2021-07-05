@@ -8,20 +8,25 @@ import com.redapps.tabib.cache.CacheDB
 import com.redapps.tabib.model.Doctor
 import com.redapps.tabib.model.Treatment
 import com.redapps.tabib.network.ApiClient
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class PatientRepository {
 
-    @WorkerThread
     fun insertTreatment(context: Context, treatment: Treatment){
-        CacheDB.getDatabase(context).treatmentDAO().insertTreatment(treatment)
+        CoroutineScope(Dispatchers.IO).launch {
+            CacheDB.getDatabase(context).treatmentDAO().insertTreatment(treatment)
+        }
     }
 
-    @WorkerThread
     fun clearUserCache(context: Context){
-        CacheDB.getDatabase(context).treatmentDAO().clearTreatments()
+        CoroutineScope(Dispatchers.IO).launch {
+            CacheDB.getDatabase(context).treatmentDAO().clearTreatments()
+        }
     }
 
     fun getTreatments(context: Context): LiveData<List<Treatment>> {

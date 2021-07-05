@@ -56,7 +56,10 @@ class TreatmentFragment : Fragment() {
     }
 
     private fun setupObservers(){
-        vm.treatments.observeForever {
+        //vm.treatments.observeForever {
+        //    updateTreatments(it)
+        //}
+        vm.getTreatments(requireContext()).observeForever {
             updateTreatments(it)
         }
         vm.dataLoading.observeForever {
@@ -66,11 +69,13 @@ class TreatmentFragment : Fragment() {
                     binding.textTreatmentNumber.visibility = View.GONE
                     binding.textTitle1Treatment.visibility = View.GONE
                     binding.textTitle2Treatment.visibility = View.GONE
+                    binding.pagerTreatment.visibility = View.GONE
                 }
                 false -> {
                     binding.textTreatmentNumber.visibility = View.VISIBLE
                     binding.textTitle1Treatment.visibility = View.VISIBLE
                     binding.textTitle2Treatment.visibility = View.VISIBLE
+                    binding.pagerTreatment.visibility = View.VISIBLE
                 }
             }
         }

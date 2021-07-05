@@ -67,9 +67,8 @@ class PatientViewModel: BaseViewModel() {
             override fun onResponse(call: Call<List<Treatment>>, response: Response<List<Treatment>>) {
                 dataLoading.value = false
                 if (response.isSuccessful){
-                    val cache = CacheDB.getDatabase(context)
                     for (treatment in response.body()!!){
-                        cache.treatmentDAO().insertTreatment(treatment)
+                        PatientRepository.getInstance().insertTreatment(context, treatment)
                     }
                     //treatments.value = response.body()!!
                     empty.value = response.body()!!.isEmpty()

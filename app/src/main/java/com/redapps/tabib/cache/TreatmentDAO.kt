@@ -2,6 +2,7 @@ package com.redapps.tabib.cache
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.redapps.tabib.model.Treatment
 import kotlinx.coroutines.flow.Flow
@@ -15,7 +16,7 @@ interface TreatmentDAO {
     @Query("DELETE FROM treatments")
     fun clearTreatments()
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertTreatment(treatment: Treatment)
 
 }
