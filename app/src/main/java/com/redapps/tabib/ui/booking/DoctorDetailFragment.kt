@@ -24,9 +24,7 @@ import com.michalsvec.singlerowcalendar.utils.DateUtils
 import com.redapps.tabib.R
 import com.redapps.tabib.databinding.FragmentBookingBinding
 import com.redapps.tabib.databinding.FragmentDoctorDetailBinding
-import com.redapps.tabib.model.Booking
-import com.redapps.tabib.model.BookingFetch
-import com.redapps.tabib.model.Doctor
+import com.redapps.tabib.model.*
 import com.redapps.tabib.network.DoctorApiClient
 import com.redapps.tabib.utils.AppConstants
 import com.redapps.tabib.utils.ToastUtils
@@ -46,7 +44,7 @@ class DoctorDetailFragment : Fragment() {
     private val binding get() = _binding!!
     private var currentMonth = 0
     private val calendar = Calendar.getInstance()
-    private val bookingAdapter = BookingAdapter(this)
+    private lateinit var bookingAdapter: BookingAdapter
     private val args: DoctorDetailFragmentArgs by navArgs()
     private lateinit var doctor: Doctor
     private lateinit var currentDate : Date
@@ -79,6 +77,8 @@ class DoctorDetailFragment : Fragment() {
         binding.buttonBackDoctorDetail.setOnClickListener {
             findNavController().navigate(R.id.action_nav_doctor_detail_to_navigation_booking)
         }
+
+        bookingAdapter = BookingAdapter(this, doctor)
 
         initCalendar()
         initBookingRecycler()
@@ -146,7 +146,7 @@ class DoctorDetailFragment : Fragment() {
 
             override fun whenSelectionChanged(isSelected: Boolean, position: Int, date: Date) {
                 currentDate = date
-                fetchAppointments(doctor.id, date.dateToString("dd-MM-yyyy"))
+                fetchAppointments(doctor.id, date.dateToString("yyyy-MM-dd"))
                 //bookingAdapter.setBookings(getBookingsFromInterval(date, doctor.startHour, doctor.endHour))
                 super.whenSelectionChanged(isSelected, position, date)
             }
@@ -166,7 +166,6 @@ class DoctorDetailFragment : Fragment() {
         }
 
         cal.select(day)
-        currentDate = calendar.time
 
         binding.buttonCalendarLeftBooking.setOnClickListener {
             cal.setDates(getDatesOfPreviousMonth())
@@ -192,10 +191,10 @@ class DoctorDetailFragment : Fragment() {
         recycler.adapter = bookingAdapter
         recycler.layoutManager = LinearLayoutManager(context)
 
-        fetchAppointments(doctor.id, calendar.time.dateToString("dd-MM-yyyy"))
+        fetchAppointments(doctor.id, currentDate.dateToString("yyyy-MM-dd"))
 
         binding.swipeBookings.setOnRefreshListener {
-            fetchAppointments(doctor.id, currentDate.dateToString("dd-MM-yyyy"))
+            fetchAppointments(doctor.id, currentDate.dateToString("yyyy-MM-dd"))
         }
     }
 
@@ -229,10 +228,10 @@ class DoctorDetailFragment : Fragment() {
         DoctorApiClient.instance.getAppointmentsByDocAndDate(BookingFetch(idDoc, date)).enqueue(object : Callback<List<Booking>>{
             override fun onResponse(call: Call<List<Booking>>, response: Response<List<Booking>>) {
                 if (response.isSuccessful){
-                    val reservedDated = response.body()!!.map { it.startDate }
-                    val bookings = getBookingsFromInterval(date.toDate("dd-MM-yyyy")!!, doctor.startHour, doctor.endHour)
+                    val reservedDated = response.body()!!.map { it.startDate.dateToString("hh:mm") }
+                    val bookings = getBookingsFromInterval(date.toDate("yyyy-MM-dd")!!, doctor.startHour, doctor.endHour)
                     for (booking in bookings){
-                        booking.booked = booking.startDate in reservedDated
+                        booking.booked = booking.startDate.dateToString("hh:mm") in reservedDated
                     }
                     bookingAdapter.setBookings(bookings)
                 } else {

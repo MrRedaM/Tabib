@@ -1,8 +1,6 @@
 package com.redapps.tabib.network
 
-import com.redapps.tabib.model.Booking
-import com.redapps.tabib.model.BookingFetch
-import com.redapps.tabib.model.Doctor
+import com.redapps.tabib.model.*
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -15,5 +13,8 @@ interface DoctorApiService {
 
     @POST("appointment")
     fun getAppointmentsByDocAndDate(@Body bookingFetch: BookingFetch): Call<List<Booking>>
+
+    @POST("appointment/add")
+    fun reserveAppointment(@Body reserve: Reserve): Call<Appointment>
 
 }

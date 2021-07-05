@@ -1,20 +1,28 @@
 package com.redapps.tabib.ui.booking
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.clovertech.autolib.utils.PrefUtils
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.gson.Gson
 import com.redapps.tabib.R
-import com.redapps.tabib.model.Booking
+import com.redapps.tabib.model.*
+import com.redapps.tabib.network.DoctorApiClient
 import com.redapps.tabib.utils.ToastUtils
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class BookingAdapter(val fragment: Fragment) : RecyclerView.Adapter<BookingAdapter.BookingViewHolder>() {
+class BookingAdapter(val fragment: Fragment, val doctor: Doctor) : RecyclerView.Adapter<BookingAdapter.BookingViewHolder>() {
 
     private val bookings = mutableListOf<Booking>()
 
@@ -30,8 +38,9 @@ class BookingAdapter(val fragment: Fragment) : RecyclerView.Adapter<BookingAdapt
         holder.timeStart.text = booking.startDate.dateToString("hh:mm")
         holder.timeEnd.text = booking.endDate.dateToString("hh:mm")
         if (!booking.booked){
+            holder.itemView.alpha = 1F
             holder.itemView.setOnClickListener {
-                showReserveDialog(fragment)
+                showReserveDialog(fragment, booking.startDate.dateToString("yyyy-MM-dd HH:mm"))
             }
         } else {
             holder.itemView.alpha = 0.3F
@@ -68,11 +77,37 @@ class BookingAdapter(val fragment: Fragment) : RecyclerView.Adapter<BookingAdapt
         return SimpleDateFormat(format).parse(this)
     }
 
-    private fun showReserveDialog(fragment: Fragment){
+    private fun showReserveDialog(fragment: Fragment, date: String){
         val dialog = BottomSheetDialog(fragment.requireContext())
         val view = fragment.layoutInflater.inflate(R.layout.reserve_bottomsheet_layout, null)
         dialog.setContentView(view)
+
+        view.findViewById<Button>(R.id.buttonReserve).setOnClickListener {
+            val userJson = PrefUtils.with(fragment.requireContext()).getString(PrefUtils.Keys.USER, "")
+            val user = Gson().fromJson(userJson, User::class.java)
+            reserve(fragment.requireContext(), doctor.id, user.id, date)
+            dialog.dismiss()
+        }
+
         dialog.show()
+    }
+
+    private fun reserve(context: Context, idDoc: Int, idPatient: Int, date: String){
+        DoctorApiClient.instance.reserveAppointment(Reserve(idDoc, idPatient, date)).enqueue(object :
+            Callback<Appointment> {
+            override fun onResponse(call: Call<Appointment>, response: Response<Appointment>) {
+                if (response.isSuccessful){
+                    ToastUtils.longToast(context, "Reserved!")
+                } else {
+                    ToastUtils.longToast(context, "Error : " + response.message())
+                }
+            }
+
+            override fun onFailure(call: Call<Appointment>, t: Throwable) {
+                ToastUtils.longToast(context, "Failed : " + t.message)
+            }
+
+        })
     }
 
     class BookingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
