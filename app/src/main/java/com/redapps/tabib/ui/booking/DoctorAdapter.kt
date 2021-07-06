@@ -59,8 +59,10 @@ class DoctorAdapter: RecyclerView.Adapter<DoctorAdapter.DoctorViewHolder>() {
         }
 
         holder.location.setOnClickListener {
-
+            MenuUtils.openMaps(context, doctor.longitude, doctor.latitude)
         }
+
+        holder.location.text = MenuUtils.getAddresse(context, doctor.longitude, doctor.latitude)
     }
 
     override fun getItemCount(): Int {

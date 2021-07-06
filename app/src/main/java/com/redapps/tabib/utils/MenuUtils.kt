@@ -5,10 +5,13 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Context.CLIPBOARD_SERVICE
 import android.content.Intent
+import android.location.Address
+import android.location.Geocoder
 import android.net.Uri
 import android.view.LayoutInflater
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.startActivity
 import com.bumptech.glide.Glide
 import com.clovertech.autolib.utils.PrefUtils
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -18,6 +21,8 @@ import com.redapps.tabib.databinding.PhoneDialogLayoutBinding
 import com.redapps.tabib.model.User
 import com.redapps.tabib.ui.LoginActivity
 import com.redapps.tabib.ui.PatientActivity
+import java.util.*
+import java.util.Locale
 
 
 object MenuUtils {
@@ -92,6 +97,41 @@ object MenuUtils {
         )
         clipboard.setPrimaryClip(clip)
         ToastUtils.longToast(context, context.getString(R.string.copied))
+    }
+
+    fun openMaps(context: Context, longitude: Double, latitude: Double){
+        val uri = java.lang.String.format(Locale.ENGLISH, "geo:%f,%f", latitude, longitude)
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+        context.startActivity(intent)
+        /*val uri =
+            "http://maps.google.com/maps?f=d&hl=en&saddr=" + latitude1.toString() + "," + longitude1.toString() + "&daddr=" + latitude2.toString() + "," + longitude2
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+        startActivity(Intent.createChooser(intent, "Select an application"))*/
+    }
+
+    fun getAddresse(context: Context, longitude: Double, latitude: Double) : String{
+        val geocoder: Geocoder
+        val addresses: List<Address>
+        geocoder = Geocoder(context, Locale.getDefault())
+
+        addresses = geocoder.getFromLocation(
+            latitude,
+            longitude,
+            1
+        ) // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+
+
+        val address: String =
+            addresses[0].getAddressLine(0) // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+
+        /*
+        val city: String = addresses[0].getLocality()
+        val state: String = addresses[0].getAdminArea()
+        val country: String = addresses[0].getCountryName()
+        val postalCode: String? = addresses[0].getPostalCode()
+        val knownName: String = addresses[0].getFeatureName()*/
+
+        return address
     }
 
 }
