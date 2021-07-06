@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.clovertech.autolib.utils.PrefUtils
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
@@ -15,6 +16,7 @@ import com.redapps.tabib.R
 import com.redapps.tabib.databinding.ReserveBottomsheetLayoutBinding
 import com.redapps.tabib.model.*
 import com.redapps.tabib.network.DoctorApiClient
+import com.redapps.tabib.utils.AppConstants
 import com.redapps.tabib.utils.ToastUtils
 import retrofit2.Call
 import retrofit2.Callback
@@ -87,6 +89,10 @@ class BookingAdapter(val fragment: Fragment, val doctor: Doctor) : RecyclerView.
         binding.textNameReserve.text = doctor.lastName + " " + doctor.firstName
         binding.textTimeReserve.text = date.dateToString("hh:mm")
         binding.textSpecialityReserve.text = doctor.speciality
+        Glide.with(fragment)
+            .load(AppConstants.BASE_URL + doctor.photo)
+            .placeholder(R.drawable.doctor1)
+            .into(binding.imageView9)
 
         binding.buttonReserve.setOnClickListener {
             val userJson = PrefUtils.with(fragment.requireContext()).getString(PrefUtils.Keys.USER, "")

@@ -97,8 +97,9 @@ class DoctorDetailFragment : Fragment() {
             MenuUtils.showPhoneDialog(requireContext(), doctor.phone)
         }
         binding.textLocationDoctorDetail.setOnClickListener {
-
+            MenuUtils.openMaps(requireContext(), doctor.longitude, doctor.latitude)
         }
+        binding.textLocationDoctorDetail.text = MenuUtils.getAddresse(requireContext(), doctor.longitude, doctor.latitude)
     }
 
     private fun initCalendar(){
