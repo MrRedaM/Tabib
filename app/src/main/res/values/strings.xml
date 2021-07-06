@@ -46,5 +46,6 @@
     <string name="call">Call</string>
     <string name="semd_sms">Send SMS</string>
     <string name="copied">Copied!</string>
+    <string name="take_an_appointment">Take an appointment</string>
 
 </resources>

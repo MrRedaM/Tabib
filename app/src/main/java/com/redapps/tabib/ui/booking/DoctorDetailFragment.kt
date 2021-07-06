@@ -27,6 +27,7 @@ import com.redapps.tabib.databinding.FragmentDoctorDetailBinding
 import com.redapps.tabib.model.*
 import com.redapps.tabib.network.DoctorApiClient
 import com.redapps.tabib.utils.AppConstants
+import com.redapps.tabib.utils.MenuUtils
 import com.redapps.tabib.utils.ToastUtils
 import retrofit2.Call
 import retrofit2.Callback
@@ -92,6 +93,12 @@ class DoctorDetailFragment : Fragment() {
             .load(AppConstants.BASE_URL + doctor.photo)
             .placeholder(R.drawable.doctor1)
             .into(binding.imageDoctorDetail)
+        binding.textPhoneDoctorDetail.setOnClickListener {
+            MenuUtils.showPhoneDialog(requireContext(), doctor.phone)
+        }
+        binding.textLocationDoctorDetail.setOnClickListener {
+
+        }
     }
 
     private fun initCalendar(){
