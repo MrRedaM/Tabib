@@ -229,7 +229,7 @@ class DoctorDetailFragment : Fragment() {
         return result
     }
 
-    private fun fetchAppointments(idDoc: Int, date: String){
+    fun fetchAppointments(idDoc: Int, date: String){
         bookingAdapter.clear()
         binding.swipeBookings.isRefreshing = true
         DoctorApiClient.instance.getAppointmentsByDocAndDate(BookingFetch(idDoc, date)).enqueue(object : Callback<List<Booking>>{
