@@ -10,5 +10,6 @@
         <attr name="textColorOnTreatmentCard" format="color"/>
         <attr name="cardSelectedBackgroundColor" format="color"/>
         <attr name="onCardSelectedBackgroundColor" format="color"/>
+        <attr name="clickableTextColor" format="color"/>
     </declare-styleable>
 </resources>

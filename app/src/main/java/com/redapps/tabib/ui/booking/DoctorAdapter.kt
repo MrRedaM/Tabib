@@ -16,6 +16,7 @@ import com.google.gson.Gson
 import com.redapps.tabib.R
 import com.redapps.tabib.model.Doctor
 import com.redapps.tabib.utils.AppConstants
+import com.redapps.tabib.utils.MenuUtils
 
 class DoctorAdapter: RecyclerView.Adapter<DoctorAdapter.DoctorViewHolder>() {
 
@@ -30,6 +31,7 @@ class DoctorAdapter: RecyclerView.Adapter<DoctorAdapter.DoctorViewHolder>() {
 
     override fun onBindViewHolder(holder: DoctorViewHolder, position: Int) {
         val doctor = doctorsFiltered[position]
+        val context = holder.itemView.context
         holder.name.text = doctor.lastName + " " + doctor.firstName
         holder.speciality.text = doctor.speciality
         holder.phone.text = doctor.phone
@@ -44,15 +46,21 @@ class DoctorAdapter: RecyclerView.Adapter<DoctorAdapter.DoctorViewHolder>() {
                     ,holder.name to prepareTransition(context, holder.name, R.string.name_transition_name)
                     ,holder.speciality to prepareTransition(context, holder.speciality, R.string.speciality_transition_name)
                     ,holder.location to prepareTransition(context, holder.location, R.string.location_transition_name)
-                    ,holder.phone to prepareTransition(context, holder.phone, R.string.phone_transition_name)
-                    ,holder.locationImage to prepareTransition(context, holder.locationImage, R.string.location_image_transition_name)
-                    ,holder.phoneImage to prepareTransition(context, holder.phoneImage, R.string.phone_image_transition_name))
+                    ,holder.phone to prepareTransition(context, holder.phone, R.string.phone_transition_name))
 
             val gson = Gson()
             val docJson = gson.toJson(doctor)
 
             it.findNavController().navigate(BookingFragmentDirections.actionDoctorDetail(docJson), extras)
         })
+
+        holder.phone.setOnClickListener {
+            MenuUtils.showPhoneDialog(context, doctor.phone)
+        }
+
+        holder.location.setOnClickListener {
+
+        }
     }
 
     override fun getItemCount(): Int {

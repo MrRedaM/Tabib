@@ -42,5 +42,9 @@
     <string name="send">Send</string>
     <string name="ask_advice">Ask Advice</string>
     <string name="write_your_message_here">Write your message here</string>
+    <string name="phone_menu">Phone Menu</string>
+    <string name="call">Call</string>
+    <string name="semd_sms">Send SMS</string>
+    <string name="copied">Copied!</string>
 
 </resources>

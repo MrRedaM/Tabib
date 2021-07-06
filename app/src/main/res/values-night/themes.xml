@@ -29,6 +29,7 @@
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
         <item name="cardSelectedBackgroundColor">?attr/colorPrimary</item>
         <item name="onCardSelectedBackgroundColor">?attr/colorOnPrimary</item>
+        <item name="clickableTextColor">@color/blue</item>
     </style>
 
     <style name="AppBottomSheetDialogTheme"
