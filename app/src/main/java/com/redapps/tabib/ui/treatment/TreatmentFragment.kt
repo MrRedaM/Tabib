@@ -16,15 +16,15 @@ import com.redapps.tabib.model.Medicament
 import com.redapps.tabib.model.Treatment
 import com.redapps.tabib.model.User
 import com.redapps.tabib.utils.ToastUtils
+import com.redapps.tabib.viewmodel.DoctorViewModel
 import com.redapps.tabib.viewmodel.PatientViewModel
-import java.util.*
 import kotlin.math.abs
 
 class TreatmentFragment : Fragment() {
 
-    private val treatmentAdapter = TreatmentAdapter()
-
-    private lateinit var vm: PatientViewModel
+    private lateinit var treatmentAdapter : TreatmentAdapter
+    private lateinit var vmPatient: PatientViewModel
+    private lateinit var vmDoctor: DoctorViewModel
     private lateinit var binding : FragmentTreatmentBinding
 
     override fun onCreateView(
@@ -32,8 +32,11 @@ class TreatmentFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        vm =
+        vmPatient =
             ViewModelProvider(this).get(PatientViewModel::class.java)
+
+        vmDoctor =
+            ViewModelProvider(this).get(DoctorViewModel::class.java)
 
         binding = FragmentTreatmentBinding.inflate(inflater, container, false)
 
@@ -49,17 +52,19 @@ class TreatmentFragment : Fragment() {
         initTreatmentsPager()
         setupObservers()
         binding.root.setOnRefreshListener {
-            vm.fetchTreatments(requireContext(), user.id)
+            vmPatient.fetchTreatments(requireContext(), user.id)
+            vmDoctor.fetchDoctors()
         }
-        vm.fetchTreatments(requireContext(), user.id)
+        vmPatient.fetchTreatments(requireContext(), user.id)
+        vmDoctor.fetchDoctors()
 
     }
 
     private fun setupObservers(){
-        vm.getTreatments(requireContext()).observeForever {
+        vmPatient.getTreatments(requireContext()).observeForever {
             updateTreatments(it)
         }
-        vm.dataLoading.observeForever {
+        vmPatient.dataLoading.observeForever {
             binding.root.isRefreshing = it
             when (it) {
                 true -> {
@@ -76,27 +81,31 @@ class TreatmentFragment : Fragment() {
                 }
             }
         }
-        vm.empty.observeForever {
+        vmPatient.empty.observeForever {
             when (it) {
                 true -> binding.emptyLayout.visibility = View.VISIBLE
                 false -> binding.emptyLayout.visibility = View.GONE
             }
         }
-        vm.failed.observeForever {
+        vmPatient.failed.observeForever {
             when (it) {
                 true -> binding.failedLayout.visibility = View.VISIBLE
                 false -> binding.failedLayout.visibility = View.GONE
             }
         }
-        vm.toastMessage.observeForever {
+        vmPatient.toastMessage.observeForever {
             try {
                 ToastUtils.longToast(requireContext(), it)
             } catch (e: Exception) {
             }
         }
+        vmDoctor.doctors.observeForever {
+            treatmentAdapter.setDoctors(it)
+        }
     }
 
     private fun initTreatmentsPager() {
+        treatmentAdapter = TreatmentAdapter()
         val pager = binding.pagerTreatment
         pager.adapter = treatmentAdapter
         pager.clipToPadding = false

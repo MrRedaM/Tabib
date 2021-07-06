@@ -16,13 +16,12 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
 import com.redapps.tabib.R
 import com.redapps.tabib.databinding.AdviceDialogLayoutBinding
-import com.redapps.tabib.model.Advice
-import com.redapps.tabib.model.Appointment
-import com.redapps.tabib.model.Message
-import com.redapps.tabib.model.Treatment
+import com.redapps.tabib.model.*
 import com.redapps.tabib.network.PatientApiClient
+import com.redapps.tabib.utils.AppConstants
 import com.redapps.tabib.utils.ToastUtils
 import com.redapps.tabib.utils.UserUtils
+import com.redapps.tabib.viewmodel.DoctorViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -30,6 +29,7 @@ import retrofit2.Response
 class TreatmentAdapter : RecyclerView.Adapter<TreatmentAdapter.TreatmentViewHolder>() {
 
     private val treatments = mutableListOf<Treatment>()
+    private var doctors = listOf<Doctor>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TreatmentViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.treatment_item_layout, parent, false)
@@ -39,9 +39,11 @@ class TreatmentAdapter : RecyclerView.Adapter<TreatmentAdapter.TreatmentViewHold
     override fun onBindViewHolder(holder: TreatmentViewHolder, position: Int) {
         val treatment = treatments[position]
         val context = holder.itemView.context
+        var doctor = doctors.find { it.id == treatment.idDoc }
         holder.textTitle.text = context.getString(R.string.treatment) + " " + treatment.idTreatment
         Glide.with(context)
-            .load(if (position % 2 == 0) R.drawable.doctor1 else R.drawable.doctor2)
+            .load(AppConstants.BASE_URL + (doctor?.photo ?: ""))
+            .placeholder(R.drawable.doctor1)
             .into(holder.imageDoc)
         holder.medicRecycler.layoutManager = LinearLayoutManager(context)
         val adapter = MedicAdapter()
@@ -50,6 +52,9 @@ class TreatmentAdapter : RecyclerView.Adapter<TreatmentAdapter.TreatmentViewHold
         holder.buttonAdvice.setOnClickListener {
             showAdviceDialog(context, treatment)
         }
+        holder.textDocName.text = doctor?.lastName + " " + doctor?.firstName
+        holder.textDocSpe.text = doctor?.speciality
+        holder.textDocPhone.text = doctor?.phone
     }
 
     private fun showAdviceDialog(context: Context, treatment: Treatment) {
@@ -90,6 +95,11 @@ class TreatmentAdapter : RecyclerView.Adapter<TreatmentAdapter.TreatmentViewHold
     fun setTreatments(newTreatments: List<Treatment>){
         treatments.clear()
         treatments.addAll(newTreatments)
+        notifyDataSetChanged()
+    }
+
+    fun setDoctors(list: List<Doctor>){
+        doctors = list
         notifyDataSetChanged()
     }
 
