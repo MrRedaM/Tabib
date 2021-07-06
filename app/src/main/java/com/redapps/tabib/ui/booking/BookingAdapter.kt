@@ -99,7 +99,7 @@ class BookingAdapter(val fragment: Fragment, val doctor: Doctor) : RecyclerView.
     }
 
     private fun reserve(context: Context, idDoc: Int, idPatient: Int, date: String, dialog: BottomSheetDialog){
-        DoctorApiClient.instance.reserveAppointment(Reserve(idDoc, idPatient, date, "")).enqueue(object :
+        DoctorApiClient.instance.reserveAppointment(Reserve(idDoc, idPatient, date)).enqueue(object :
             Callback<Appointment> {
             override fun onResponse(call: Call<Appointment>, response: Response<Appointment>) {
                 if (response.isSuccessful){

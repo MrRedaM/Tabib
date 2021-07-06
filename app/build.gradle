@@ -3,7 +3,7 @@ plugins {
     id 'kotlin-android'
     id "androidx.navigation.safeargs"
     id 'kotlin-kapt'
-
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -88,6 +88,16 @@ dependencies {
 
     // WorkManager
     implementation "androidx.work:work-runtime-ktx:2.5.0"
+
+    // Firebase
+    // Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:28.2.0')
+    // Add the dependency for the Firebase SDK for Google Analytics
+    // When using the BoM, don't specify versions in Firebase dependencies
+    // Analytics
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    // FCM
+    implementation 'com.google.firebase:firebase-messaging-ktx'
 
 
 }

@@ -3,6 +3,7 @@ package com.redapps.tabib.ui
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -11,7 +12,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.clovertech.autolib.utils.PrefUtils
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.michalsvec.singlerowcalendar.calendar.CalendarChangesObserver
 import com.michalsvec.singlerowcalendar.calendar.CalendarViewManager
@@ -22,10 +26,9 @@ import com.michalsvec.singlerowcalendar.utils.DateUtils
 import com.redapps.tabib.R
 import com.redapps.tabib.databinding.ActivityDoctorBinding
 import com.redapps.tabib.databinding.AppointmentDetailLayoutBinding
-import com.redapps.tabib.model.Appointment
-import com.redapps.tabib.model.AppointmentDetail
-import com.redapps.tabib.model.Doctor
-import com.redapps.tabib.model.User
+import com.redapps.tabib.model.*
+import com.redapps.tabib.network.AuthApiClient
+import com.redapps.tabib.network.DoctorApiClient
 import com.redapps.tabib.ui.appointment.AppointmentAdapter
 import com.redapps.tabib.utils.AppConstants
 import com.redapps.tabib.utils.MenuUtils
@@ -33,11 +36,16 @@ import com.redapps.tabib.utils.ToastUtils
 import com.redapps.tabib.utils.UserUtils
 import com.redapps.tabib.viewmodel.DoctorViewModel
 import com.redapps.tabib.viewmodel.PatientViewModel
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
 
 
 class DoctorActivity : AppCompatActivity() {
+
+    val TAG = "LOG TAG"
 
     private lateinit var binding: ActivityDoctorBinding
     private lateinit var user : User
@@ -96,6 +104,11 @@ class DoctorActivity : AppCompatActivity() {
             .load(R.drawable.doctor1)
             .into(binding.imageAccountMain)
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        sendFCMToken()
     }
 
     private fun showAppointmentDetailDialog(appointment: AppointmentDetail) {
@@ -314,5 +327,37 @@ class DoctorActivity : AppCompatActivity() {
         }
         calendar.add(Calendar.DATE, -1)
         return list
+    }
+
+    private fun sendFCMToken(){
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+            if (token != null){
+                PrefUtils.with(this).save(PrefUtils.Keys.FCM_TOKEN, token)
+                AuthApiClient.instance.sendToken(NotificationToken(user.id, token)).enqueue(object :
+                    Callback<NotificationToken> {
+                    override fun onResponse(call: Call<NotificationToken>, response: Response<NotificationToken>) {
+                        if (response.isSuccessful){
+                            ToastUtils.longToast(applicationContext, "Token sent!")
+                        } else {
+
+                        }
+                    }
+
+                    override fun onFailure(call: Call<NotificationToken>, t: Throwable) {
+
+                    }
+                })
+            }
+
+            // Log and toast
+            Log.d(TAG, "FCM token : " + token)
+        })
     }
 }
